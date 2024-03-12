@@ -1,0 +1,28 @@
+{
+	"name": "todo-list",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"private": true,
+	"scripts": {
+		"start": "webpack serve --open --config webpack.dev.js",
+		"build": "webpack --config webpack.prod.js",
+		"push": "git subtree push --prefix dist origin gh-pages"
+	},
+	"author": "Oliver-Ard",
+	"license": "ISC",
+	"devDependencies": {
+		"copy-webpack-plugin": "^12.0.2",
+		"css-loader": "^6.10.0",
+		"css-minimizer-webpack-plugin": "^6.0.0",
+		"html-webpack-plugin": "^5.6.0",
+		"mini-css-extract-plugin": "^2.8.1",
+		"webpack": "^5.90.3",
+		"webpack-cli": "^5.1.4",
+		"webpack-dev-server": "^5.0.2",
+		"webpack-merge": "^5.10.0"
+	},
+	"dependencies": {
+		"date-fns": "^3.4.0"
+	}
+}
