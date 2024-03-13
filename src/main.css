@@ -1,4 +1,97 @@
+@import "./css/reset.css";
+@import "./css/utility-classes.css";
+@import "./css/sidebar.css";
+
+/* VARIABLES */
+:root {
+	--ff-body: "Inter", sans-serif;
+
+	--font-size-200: 0.694rem;
+	--font-size-300: 0.833rem;
+	--font-size-400: 1rem;
+	--font-size-500: 1.2rem;
+	--font-size-600: 1.44rem;
+	--font-size-700: 1.728rem;
+	--font-size-800: 2.074rem;
+	--font-size-900: 2.488rem;
+	--font-size-1000: 2.986rem;
+
+	--clr-primary: #306a79;
+	--clr-secondary: #ffbb01;
+	--clr-dark: #1b1818;
+	--clr-grey: #d9dcdd;
+	--clr-light: #fff;
+
+	--clr-overlay: rgb(0, 0, 0, 0.85);
+	--clr-overlay-2: rgba(32, 47, 48, 0.522);
+	--clr-overlay-3: #e3fdfd53;
+
+	--box-shadow: 0px 5px 15px 0 rgba(0, 0, 0, 0.8);
+
+	--button-box-shadow-light: 0 0 0 2px rgba(255, 255, 255, 0.635);
+	--button-box-shadow-dark: 0 0 0 2px rgba(0, 0, 0, 0.635);
+
+	--border-radius: 8px;
+}
+
+/* GENERAL STYLES */
+html {
+	scrollbar-width: thin;
+	scrollbar-color: var(--clr-primary) var(--clr-grey);
+	scroll-behavior: smooth;
+}
+
 body {
-	font-family: "Courier New", Courier, monospace;
-	background: peachpuff;
+	font-family: var(--ff-body);
+	display: flex;
+}
+
+main {
+	flex: 1;
+}
+
+h1 {
+	font-size: var(--font-size-1000);
+}
+
+h2 {
+	font-size: var(--font-size-900);
+}
+
+h3 {
+	font-size: var(--font-size-800);
+}
+
+h4 {
+	font-size: var(--font-size-700);
+}
+
+button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	padding: 0.3em;
+}
+
+i {
+	font-size: var(--font-size-500);
+	margin: 0 0.3rem;
+}
+
+/* MEDIA QUERIES */
+@media only screen and (max-width: 768px) {
+	.container {
+		padding-left: 5rem;
+		width: min(95%, 80rem);
+	}
+
+	/* --Sidebar-- */
+	#sidebar {
+		position: fixed;
+		transform: translateX(-14rem);
+	}
+
+	#sidebar .slider-btn {
+		display: block;
+	}
 }

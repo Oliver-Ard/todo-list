@@ -1,0 +1,135 @@
+#sidebar {
+	background: var(--clr-primary);
+	color: var(--clr-light);
+	width: 18rem;
+	min-height: 100vh;
+	box-shadow: var(--box-shadow);
+
+	transition: transform 0.3s ease-in-out;
+}
+
+#sidebar .navigation-btns {
+	padding: 2rem 1rem;
+
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: space-between;
+	gap: 0.6rem;
+
+	position: sticky;
+	top: 0;
+}
+
+#sidebar .logo {
+	font-size: var(--font-size-800);
+}
+
+#sidebar ul li {
+	margin-bottom: 0.2rem;
+}
+
+/* --Sidebar Buttons-- */
+#sidebar button {
+	background: transparent;
+	color: var(--clr-light);
+	border-radius: var(--border-radius);
+	transition: box-shadow 0.2s ease;
+}
+
+#sidebar button:focus {
+	outline: 0;
+	box-shadow: var(--button-box-shadow-light);
+}
+
+#sidebar button:active {
+	opacity: 0.85;
+}
+
+#sidebar button:not(.slider-btn, .add-project-btn) {
+	width: 100%;
+	text-align: left;
+}
+
+#sidebar button:hover:not(.slider-btn, .add-project-btn) {
+	background: var(--clr-overlay-3);
+}
+
+#sidebar .slider-btn {
+	display: none;
+	align-self: flex-start;
+}
+
+#sidebar .task-btn {
+	color: var(--clr-secondary);
+	font-weight: 700;
+}
+
+#sidebar .inbox-btn {
+	position: relative;
+}
+
+#sidebar .notes-btn {
+	position: relative;
+}
+
+#sidebar .buttons-list {
+	margin: 2rem 0;
+}
+
+/* Projects Buttons */
+#sidebar .wrapper-my-projects {
+	position: relative;
+	margin-bottom: 0.5rem;
+}
+
+#sidebar .my-projects-btn {
+	font-weight: 700;
+	padding-left: 0.5rem;
+}
+
+#sidebar .add-project-btn {
+	position: absolute;
+	top: 4px;
+	right: 5px;
+	padding: 0;
+}
+
+#sidebar .add-project-btn:focus {
+	box-shadow: none;
+	color: var(--clr-secondary);
+}
+
+#sidebar .project-btn {
+	position: relative;
+}
+
+#sidebar .project-btn::before {
+	content: "# ";
+	color: var(--clr-secondary);
+}
+
+/* Number of todos/notes for each section */
+#sidebar .project-btn::after,
+#sidebar .inbox-btn::after,
+#sidebar .notes-btn::after {
+	content: attr(data-content);
+	color: var(--clr-grey);
+
+	position: absolute;
+	right: 15px;
+}
+
+/* JS CLASSES */
+
+#sidebar.active {
+	transform: translateX(0);
+}
+
+/* Selected button  */
+#sidebar button.active {
+	background: var(--clr-overlay-2);
+}
+
+#sidebar button.active:hover {
+	background-color: var(--clr-overlay-2);
+}

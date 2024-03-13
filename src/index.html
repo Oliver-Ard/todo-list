@@ -3,13 +3,87 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+			rel="stylesheet" />
 		<script
 			src="https://kit.fontawesome.com/1c4826088d.js"
 			crossorigin="anonymous"></script>
 		<link rel="icon" href="images/favicon.png" />
-		<title>ToDo List</title>
+		<title>SwiftTasks</title>
 	</head>
+
 	<body>
-		<h1>Todo List</h1>
+		<aside id="sidebar" data-element="sidebar">
+			<nav class="navigation-btns">
+				<!-- Slider Button -->
+				<button data-element="slider-btn" class="slider-btn">
+					<i class="fa-solid fa-sliders"></i>
+				</button>
+				<div class="wrapper">
+					<h1 class="logo">SwiftTasks</h1>
+					<!-- Sidebar Buttons -->
+					<ul class="buttons-list">
+						<li>
+							<button data-element="task-btn" class="task-btn">
+								<i class="fa-solid fa-circle-plus"></i> Add Task / Note
+							</button>
+						</li>
+						<li>
+							<button data-element="search-btn" class="search-btn">
+								<i class="fa-solid fa-magnifying-glass"></i> Search
+							</button>
+						</li>
+						<li>
+							<button
+								data-element="inbox-btn"
+								data-content="10"
+								class="inbox-btn active">
+								<i class="fa-solid fa-inbox"></i> Inbox
+							</button>
+						</li>
+						<li>
+							<button
+								data-element="notes-btn"
+								data-content="5"
+								class="notes-btn">
+								<i class="fa-regular fa-note-sticky"></i> Notes
+							</button>
+						</li>
+					</ul>
+					<!-- Projects Buttons -->
+					<div class="wrapper-my-projects">
+						<button data-element="my-projects-btn" class="my-projects-btn">
+							My Projects
+						</button>
+						<button data-element="add-project-btn" class="add-project-btn">
+							<i class="fa-solid fa-plus"></i>
+						</button>
+					</div>
+
+					<ul data-element="projects">
+						<li>
+							<button
+								data-element="project-btn"
+								data-content="2"
+								class="project-btn">
+								Home
+							</button>
+						</li>
+						<li>
+							<button data-element="project-btn" class="project-btn">
+								Health
+							</button>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</aside>
+
+		<main id="content">
+			<section id="inbox" class="container"></section>
+		</main>
 	</body>
 </html>
