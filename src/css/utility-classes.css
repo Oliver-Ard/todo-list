@@ -1,8 +1,13 @@
 .container {
-	width: min(85%, 80rem);
+	width: min(85%, 50rem);
 	margin: 3rem auto 0;
 }
 
 .wrapper {
 	flex: 1;
+}
+
+.section-title {
+	font-size: var(--font-size-700);
+	margin-bottom: 2.5rem;
 }

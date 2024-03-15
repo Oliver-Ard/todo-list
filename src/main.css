@@ -1,6 +1,7 @@
 @import "./css/reset.css";
 @import "./css/utility-classes.css";
 @import "./css/sidebar.css";
+@import "./css/todos.css";
 
 /* VARIABLES */
 :root {
@@ -18,9 +19,11 @@
 
 	--clr-primary: #306a79;
 	--clr-secondary: #ffbb01;
-	--clr-dark: #1b1818;
+	--clr-dark: #242020;
 	--clr-grey: #d9dcdd;
 	--clr-light: #fff;
+	--clr-red: #b70000;
+	--clr-purple: #a500be;
 
 	--clr-overlay: rgb(0, 0, 0, 0.85);
 	--clr-overlay-2: rgba(32, 47, 48, 0.522);
@@ -29,9 +32,10 @@
 	--box-shadow: 0px 5px 15px 0 rgba(0, 0, 0, 0.8);
 
 	--button-box-shadow-light: 0 0 0 2px rgba(255, 255, 255, 0.635);
-	--button-box-shadow-dark: 0 0 0 2px rgba(0, 0, 0, 0.635);
+	--button-box-shadow-dark: 0 0 0 2px rgba(0, 0, 0, 0.7);
 
 	--border-radius: 8px;
+	--border-radius-2: 50%;
 }
 
 /* GENERAL STYLES */
@@ -48,6 +52,14 @@ body {
 
 main {
 	flex: 1;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+	color: var(--clr-dark);
 }
 
 h1 {
@@ -73,8 +85,12 @@ button {
 	padding: 0.3em;
 }
 
+button:active {
+	opacity: 0.85;
+}
+
 i {
-	font-size: var(--font-size-500);
+	font-size: inherit;
 	margin: 0 0.3rem;
 }
 
@@ -88,10 +104,21 @@ i {
 	/* --Sidebar-- */
 	#sidebar {
 		position: fixed;
+		z-index: 2;
 		transform: translateX(-14rem);
 	}
 
 	#sidebar .slider-btn {
 		display: block;
+	}
+
+	.todo-item .todo-item-description {
+		width: 15rem;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+	.todo-item .todo-item-description {
+		width: 6.5rem;
 	}
 }

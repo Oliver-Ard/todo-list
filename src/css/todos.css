@@ -1,0 +1,128 @@
+.todo-item {
+	cursor: pointer;
+	margin-bottom: 1.5rem;
+	border-bottom: 1px solid var(--clr-grey);
+
+	display: flex;
+	gap: 1rem;
+}
+
+/* --Todo Title-- */
+.todo-item .todo-item-title {
+	cursor: pointer;
+	font-size: var(--font-size-500);
+	margin-bottom: 0.3rem;
+	word-break: break-word;
+
+	display: inline-flex;
+	position: relative;
+}
+
+.todo-item .todo-item-title::before {
+	content: "";
+	height: 1.5px;
+	background: var(--clr-dark);
+	top: 50%;
+	left: -5px;
+	right: -5px;
+	position: absolute;
+	transition: transform 0.2s ease-in-out;
+
+	transform: scale(0);
+}
+
+/* --Todo Description & Date-- */
+.todo-item .todo-item-description,
+.todo-item .todo-item-date {
+	font-size: var(--font-size-300);
+	margin-bottom: 0.3rem;
+}
+
+.todo-item .todo-item-description {
+	width: 20rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.todo-item .todo-item-date {
+	color: var(--clr-purple);
+}
+
+/* --Buttons-- */
+.todo-item .edit-todo-btn,
+.todo-item .delete-todo-btn {
+	background: none;
+	font-size: var(--font-size-500);
+	padding: 0;
+	border-radius: var(--border-radius);
+	opacity: 0.7;
+
+	align-self: center;
+
+	transition: all 0.1s ease-in-out;
+}
+
+.todo-item .edit-todo-btn:hover,
+.todo-item .delete-todo-btn:hover,
+.todo-item .check-btn:hover {
+	transform: scale(1.2);
+}
+
+.todo-item .edit-todo-btn:focus,
+.todo-item .delete-todo-btn:focus,
+.todo-item .check-btn:focus {
+	outline: 0;
+	box-shadow: var(--button-box-shadow-dark);
+}
+
+.todo-item .edit-todo-btn {
+	color: var(--clr-dark);
+}
+
+.todo-item .delete-todo-btn {
+	color: var(--clr-red);
+}
+
+/* --Check Button-- */
+.todo-item .check-btn {
+	appearance: none;
+	cursor: pointer;
+	color: var(--clr-red);
+	font: inherit;
+	margin-top: 0.8rem;
+	width: 1.1rem;
+	height: 1.1rem;
+	border: 2.5px solid currentColor;
+	border-radius: var(--border-radius-2);
+	transition: all 0.2s ease-in-out;
+
+	position: relative;
+}
+
+.todo-item .check-btn::before {
+	content: "";
+	width: 0.6rem;
+	height: 0.6rem;
+	border-radius: var(--border-radius-2);
+	box-shadow: inset 1em 1em currentColor;
+
+	position: absolute;
+	top: calc(50% - 0.3rem);
+	left: calc(50% - 0.3rem);
+
+	transform: scale(0);
+	transition: transform 0.2s ease-in-out;
+}
+
+.todo-item .check-btn:checked::before {
+	transform: scale(1);
+}
+
+.todo-item .check-btn:checked + .wrapper {
+	opacity: 0.5;
+}
+
+.todo-item .check-btn:checked + .wrapper .todo-item-title::before {
+	transform: scale(1);
+}
