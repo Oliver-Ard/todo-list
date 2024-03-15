@@ -3,12 +3,14 @@ class Todo {
 	#description;
 	#dueDate;
 	#priorityStatus;
+	#status;
 
 	constructor(title, description, dueDate, priorityStatus) {
 		this.#title = title;
 		this.#description = description;
 		this.#dueDate = dueDate;
 		this.#priorityStatus = priorityStatus;
+		this.#status = "unfinished";
 	}
 
 	get title() {
@@ -22,6 +24,15 @@ class Todo {
 	}
 	get priorityStatus() {
 		return this.#priorityStatus;
+	}
+	get status() {
+		return this.#status;
+	}
+
+	updateTodoStatus(newState) {
+		if (newState === "finished" || newState === "unfinished") {
+			this.#status = newState;
+		}
 	}
 }
 

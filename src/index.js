@@ -6,9 +6,10 @@ import "./main.css";
 class App {
 	#display;
 	#sidebar;
+	#todos;
 
 	constructor() {
-		this.todos = new TodosList();
+		this.#todos = new TodosList();
 		this.#display = new Display();
 		this.#sidebar = document.querySelector("#sidebar");
 
@@ -21,27 +22,43 @@ class App {
 			case "inbox": {
 				this.#display.renderInbox();
 				this.#addTask();
-				this.#showTodosList();
+				this.#showTasksList();
 				break;
 			}
 		}
 	}
 
-	#showTodosList() {
+	#showTasksList() {
 		const todosListEl = document.querySelector("[data-element = 'todos-list']");
 		todosListEl.textContent = "";
 
-		for (let todo of this.todos.list) {
+		for (let todo of this.#todos.list) {
 			const todoEl = this.#display.renderTodo(
 				todo.title,
 				todo.description,
 				todo.dueDate,
 				todo.priorityStatus
 			);
-			// Add index for each todo
-			todoEl.setAttribute("data-index", `${this.todos.list.indexOf(todo)}`);
+			// Add index for the todo to be able to manipulate it
+			todoEl.setAttribute("data-index", `${this.#todos.list.indexOf(todo)}`);
 
+			// Change the state of the checkbox button depending on the status of the todo
+			const checkBox = todoEl.children[0];
+			if (todo.status === "unfinished") {
+				checkBox.checked = false;
+			} else {
+				checkBox.checked = true;
+			}
 			todosListEl.append(todoEl);
+		}
+	}
+
+	#toggleTaskStatus(targetItem) {
+		const taskIndex = targetItem.parentNode.dataset.index;
+		if (!targetItem.checked) {
+			this.#todos.list[taskIndex].updateTodoStatus("unfinished");
+		} else {
+			this.#todos.list[taskIndex].updateTodoStatus("finished");
 		}
 	}
 
@@ -57,18 +74,18 @@ class App {
 			// Add Task
 			const task = new Todo(taskName, taskDescription, dueDate, priorityStatus);
 
-			this.todos.addTodo(task);
+			this.#todos.addTodo(task);
 			addTaskForm.reset();
 
-			this.#showTodosList();
+			this.#showTasksList();
 		});
 	}
 
 	#deleteTask(targetItem) {
-		const taskToDelete = targetItem.parentNode.dataset.index;
-		this.todos.removeTodo(taskToDelete);
+		const taskIndex = targetItem.parentNode.dataset.index;
+		this.#todos.removeTodo(taskIndex);
 
-		this.#showTodosList();
+		this.#showTasksList();
 	}
 
 	// HELPER METHODS
@@ -101,6 +118,10 @@ class App {
 			}
 			case "delete-todo": {
 				this.#deleteTask(targetParent);
+				break;
+			}
+			case "check": {
+				this.#toggleTaskStatus(target);
 				break;
 			}
 			case "close-modal": {
