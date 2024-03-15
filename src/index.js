@@ -15,19 +15,37 @@ class App {
 		this.#loadEventListeners();
 	}
 
-	#toggleSidebar() {
-		this.#sidebar.classList.toggle("active");
-	}
-
 	#showSection(sectionName) {
 		// Select Section to show
 		switch (sectionName) {
 			case "inbox": {
 				this.#display.renderInbox();
+				this.#handleAddTaskForm();
+				this.#showTodosList();
 				break;
 			}
 		}
-		// Show Todo List
+	}
+
+	#handleAddTaskForm() {
+		const addTaskForm = document.querySelector("[data-form = 'add-task']");
+
+		addTaskForm.addEventListener("submit", () => {
+			// Get Elements
+			const taskName = document.querySelector("#task-name").value;
+			const taskDescription = document.querySelector("#task-description").value;
+			const dueDate = document.querySelector("#due-date").value;
+			const priorityStatus = document.querySelector("#priority-status").value;
+			// Add Task
+			const task = new Todo(taskName, taskDescription, dueDate, priorityStatus);
+
+			this.todos.addTodo(task);
+			this.#showTodosList();
+			addTaskForm.reset();
+		});
+	}
+
+	#showTodosList() {
 		const todosListEl = document.querySelector("[data-element = 'todos-list']");
 		todosListEl.textContent = "";
 
@@ -43,21 +61,7 @@ class App {
 		}
 	}
 
-	#toggleModal(modalName) {
-		switch (modalName) {
-			case "add-task": {
-				const addTaskModal = document.querySelector("#add-task-modal");
-				const titleInput = document.querySelector("#task-name");
-				if (!addTaskModal.open) {
-					addTaskModal.showModal();
-					titleInput.focus();
-				} else {
-					addTaskModal.close();
-				}
-			}
-		}
-	}
-
+	// HELPER METHODS
 	// --Sidebar Buttons Handler--
 	#clickSidebarBtn(e) {
 		const target = e.target;
@@ -92,13 +96,29 @@ class App {
 		}
 	}
 
+	#toggleModal(modalName) {
+		switch (modalName) {
+			case "add-task": {
+				const addTaskModal = document.querySelector("#add-task-modal");
+				if (!addTaskModal.open) {
+					addTaskModal.showModal();
+				} else {
+					addTaskModal.close();
+				}
+			}
+		}
+	}
+
+	#toggleSidebar() {
+		this.#sidebar.classList.toggle("active");
+	}
+
 	#loadEventListeners() {
 		window.addEventListener("DOMContentLoaded", () => {
 			this.#showSection("inbox");
 		});
 
 		this.#sidebar.addEventListener("click", this.#clickSidebarBtn.bind(this));
-
 		this.#display.content.addEventListener(
 			"click",
 			this.#clickMainContentBtn.bind(this)

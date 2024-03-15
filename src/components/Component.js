@@ -83,6 +83,7 @@ class Component {
 		titleInput.setAttribute("placeholder", "Task name");
 		titleInput.setAttribute("maxlength", "50");
 		titleInput.setAttribute("required", "");
+		titleInput.setAttribute("autofocus", "");
 		form.append(titleInput);
 		// Description Input
 		const descriptionInput = Element.createTextArea("task-description");
@@ -133,6 +134,7 @@ class Component {
 		form.append(wrapper);
 		// Submit Button
 		const submitBtn = Element.createButton("submit");
+		submitBtn.setAttribute("formmethod", "dialog");
 		submitBtn.textContent = "Add";
 		form.append(submitBtn);
 
