@@ -11,6 +11,7 @@
 .todo-item .todo-item-title {
 	cursor: pointer;
 	font-size: var(--font-size-500);
+	font-weight: 500;
 	margin-bottom: 0.3rem;
 	word-break: break-word;
 
@@ -33,12 +34,14 @@
 
 /* --Todo Description & Date-- */
 .todo-item .todo-item-description,
-.todo-item .todo-item-date {
+.todo-item .todo-item-date,
+.todo-item .todo-priority-tag {
 	font-size: var(--font-size-300);
 	margin-bottom: 0.3rem;
 }
 
 .todo-item .todo-item-description {
+	font-weight: 300;
 	width: 20rem;
 	white-space: nowrap;
 	overflow: hidden;
@@ -47,6 +50,14 @@
 
 .todo-item .todo-item-date {
 	color: var(--clr-purple);
+}
+
+.todo-item .todo-priority-tag {
+	display: inline-block;
+	background: var(--clr-secondary);
+	border-radius: var(--border-radius-3);
+	line-height: 1.1;
+	padding: 0.3em 0.6em;
 }
 
 /* --Buttons-- */
@@ -88,7 +99,7 @@
 .todo-item .check-btn {
 	appearance: none;
 	cursor: pointer;
-	color: var(--clr-red);
+	color: var(--clr-grey-2);
 	font: inherit;
 	margin-top: 0.8rem;
 	width: 1.1rem;

@@ -1,7 +1,7 @@
 @import "./css/reset.css";
 @import "./css/utility-classes.css";
 @import "./css/sidebar.css";
-@import "./css/todos.css";
+@import "./css/todo.css";
 
 /* VARIABLES */
 :root {
@@ -20,7 +20,8 @@
 	--clr-primary: #306a79;
 	--clr-secondary: #ffbb01;
 	--clr-dark: #242020;
-	--clr-grey: #d9dcdd;
+	--clr-grey: #d8d8d8;
+	--clr-grey-2: #a9a9a9;
 	--clr-light: #fff;
 	--clr-red: #b70000;
 	--clr-purple: #a500be;
@@ -36,6 +37,7 @@
 
 	--border-radius: 8px;
 	--border-radius-2: 50%;
+	--border-radius-3: 50px;
 }
 
 /* GENERAL STYLES */
@@ -47,6 +49,7 @@ html {
 
 body {
 	font-family: var(--ff-body);
+	color: var(--clr-dark);
 	display: flex;
 }
 
@@ -86,12 +89,37 @@ button {
 }
 
 button:active {
-	opacity: 0.85;
+	opacity: 0.8;
 }
 
 i {
 	font-size: inherit;
 	margin: 0 0.3rem;
+}
+
+input[type="date"],
+select {
+	padding: 0.2em 0.5em;
+	margin-right: 1rem;
+	border: 1px solid var(--clr-grey-2);
+	border-radius: var(--border-radius);
+}
+
+input[type="date"]:focus,
+select:focus {
+	outline: none;
+	box-shadow: var(--button-box-shadow-dark);
+}
+
+input[type="date"] {
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+label {
+	font-weight: 500;
+	margin-right: 0.5rem;
+	opacity: 0.8;
 }
 
 /* MEDIA QUERIES */

@@ -19,7 +19,7 @@
 		<aside id="sidebar">
 			<nav class="navigation-btns">
 				<!-- Slider Button -->
-				<button data-button="slider" class="slider-btn">
+				<button data-button="slider" class="slider-btn sidebar-btn">
 					<i class="fa-solid fa-sliders"></i>
 				</button>
 				<div class="wrapper">
@@ -27,35 +27,32 @@
 					<!-- Sidebar Buttons -->
 					<ul class="buttons-list">
 						<li>
-							<button data-button="task" class="task-btn">
-								<i class="fa-solid fa-circle-plus"></i> Add Task / Note
-							</button>
-						</li>
-						<li>
-							<button data-button="search" class="search-btn">
-								<i class="fa-solid fa-magnifying-glass"></i> Search
-							</button>
-						</li>
-						<li>
 							<button
 								data-button="inbox"
 								data-content="10"
-								class="inbox-btn active">
+								class="inbox-btn sidebar-btn active">
 								<i class="fa-solid fa-inbox"></i> Inbox
 							</button>
 						</li>
 						<li>
-							<button data-button="notes" data-content="5" class="notes-btn">
+							<button
+								data-button="notes"
+								data-content="5"
+								class="notes-btn sidebar-btn">
 								<i class="fa-regular fa-note-sticky"></i> Notes
 							</button>
 						</li>
 					</ul>
 					<!-- Projects Buttons -->
-					<div class="wrapper-my-projects">
-						<button data-button="my-projects" class="my-projects-btn">
+					<div class="my-projects-wrapper">
+						<button
+							data-button="my-projects"
+							class="my-projects-btn sidebar-btn">
 							My Projects
 						</button>
-						<button data-button="add-project" class="add-project-btn">
+						<button
+							data-button="add-project"
+							class="add-project-btn sidebar-btn">
 							<i class="fa-solid fa-plus"></i>
 						</button>
 					</div>
@@ -65,12 +62,14 @@
 							<button
 								data-button="project"
 								data-content="2"
-								class="project-btn">
+								class="project-btn sidebar-btn">
 								Home
 							</button>
 						</li>
 						<li>
-							<button data-button="project" class="project-btn">Health</button>
+							<button data-button="project" class="project-btn sidebar-btn">
+								Health
+							</button>
 						</li>
 					</ul>
 				</div>

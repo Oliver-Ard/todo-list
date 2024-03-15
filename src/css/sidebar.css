@@ -30,24 +30,24 @@
 }
 
 /* --Sidebar Buttons-- */
-#sidebar button {
+#sidebar .sidebar-btn {
 	background: transparent;
 	color: var(--clr-light);
 	border-radius: var(--border-radius);
 	transition: box-shadow 0.2s ease;
 }
 
-#sidebar button:focus {
+#sidebar .sidebar-btn:focus {
 	outline: 0;
 	box-shadow: var(--button-box-shadow-light);
 }
 
-#sidebar button:not(.slider-btn, .add-project-btn) {
+#sidebar .sidebar-btn:not(.slider-btn, .add-project-btn) {
 	width: 100%;
 	text-align: left;
 }
 
-#sidebar button:hover:not(.slider-btn, .add-project-btn) {
+#sidebar .sidebar-btn:hover:not(.slider-btn, .add-project-btn) {
 	background: var(--clr-overlay-3);
 }
 
@@ -56,17 +56,20 @@
 	align-self: flex-start;
 }
 
-#sidebar .task-btn {
-	color: var(--clr-secondary);
-	font-weight: 700;
-}
-
-#sidebar .inbox-btn {
-	position: relative;
-}
-
+#sidebar .inbox-btn,
 #sidebar .notes-btn {
 	position: relative;
+}
+
+/* Number of todos/notes for each section */
+#sidebar .project-btn::after,
+#sidebar .inbox-btn::after,
+#sidebar .notes-btn::after {
+	content: attr(data-content);
+	color: var(--clr-grey);
+
+	position: absolute;
+	right: 15px;
 }
 
 #sidebar .buttons-list {
@@ -74,7 +77,7 @@
 }
 
 /* Projects Buttons */
-#sidebar .wrapper-my-projects {
+#sidebar .my-projects-wrapper {
 	position: relative;
 	margin-bottom: 0.5rem;
 }
@@ -89,6 +92,12 @@
 	top: 4px;
 	right: 5px;
 	padding: 0;
+
+	transition: all 0.15s ease-in-out;
+}
+
+#sidebar .add-project-btn:hover {
+	transform: scale(1.5);
 }
 
 #sidebar .add-project-btn:focus {
@@ -105,17 +114,6 @@
 	color: var(--clr-secondary);
 }
 
-/* Number of todos/notes for each section */
-#sidebar .project-btn::after,
-#sidebar .inbox-btn::after,
-#sidebar .notes-btn::after {
-	content: attr(data-content);
-	color: var(--clr-grey);
-
-	position: absolute;
-	right: 15px;
-}
-
 /* JS CLASSES */
 
 #sidebar.active {
@@ -123,10 +121,10 @@
 }
 
 /* Selected button  */
-#sidebar button.active {
+#sidebar .sidebar-btn.active {
 	background: var(--clr-overlay-2);
 }
 
-#sidebar button.active:hover {
+#sidebar .sidebar-btn.active:hover {
 	background-color: var(--clr-overlay-2);
 }
