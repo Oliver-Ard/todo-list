@@ -4,11 +4,9 @@ import Display from "./components/Display.js";
 import "./main.css";
 
 class App {
-	#sidebar;
 	#todos;
 
 	constructor() {
-		this.#sidebar = document.querySelector("#sidebar");
 		this.#todos = new TodosList();
 
 		this.#loadEventListeners();
@@ -128,12 +126,13 @@ class App {
 	}
 
 	// HELPER METHODS
-	// --Sidebar Buttons Handler--
-	#clickSidebarBtn(e) {
+	// Buttons Handler
+	#handleDocumentBtns(e) {
 		const target = e.target;
+		// We also target the parent because some buttons have icons, and the data attr is on the button
 		const targetParent = e.target.parentNode;
-
 		switch (target.dataset.button || targetParent.dataset.button) {
+			// Sidebar Buttons
 			case "slider": {
 				this.#toggleSidebar();
 				break;
@@ -142,15 +141,7 @@ class App {
 				this.#showSection("inbox");
 				break;
 			}
-		}
-	}
-
-	// --Main Content Buttons Handler--
-	#clickMainContentBtn(e) {
-		const target = e.target;
-		// We also target the parent because some buttons have icons, and the data attr is on the button
-		const targetParent = e.target.parentNode;
-		switch (target.dataset.button || targetParent.dataset.button) {
+			// Main Content Buttons
 			case "add": {
 				Display.renderModal("add-modal", this.#getSection("inbox"));
 				this.#addTask();
@@ -171,6 +162,7 @@ class App {
 				this.#toggleTaskStatus(target);
 				break;
 			}
+			// Modal Buttons
 			case "close-modal": {
 				this.#removeModal();
 				break;
@@ -200,7 +192,8 @@ class App {
 	}
 
 	#toggleSidebar() {
-		this.#sidebar.classList.toggle("active");
+		const sidebar = document.querySelector("#sidebar");
+		sidebar.classList.toggle("active");
 	}
 
 	#getSection(element) {
@@ -212,11 +205,7 @@ class App {
 			this.#showSection("inbox");
 		});
 
-		this.#sidebar.addEventListener("click", this.#clickSidebarBtn.bind(this));
-		Display.content.addEventListener(
-			"click",
-			this.#clickMainContentBtn.bind(this)
-		);
+		document.addEventListener("click", this.#handleDocumentBtns.bind(this));
 	}
 }
 const app = new App();
