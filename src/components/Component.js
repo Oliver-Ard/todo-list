@@ -56,22 +56,10 @@ class Component {
 		return listItem;
 	}
 
-	static createAddBtn(btnType) {
-		const button = Element.createButton("add", "add");
-		button.textContent = `Add ${btnType}`;
-		const plusIcon = Element.createIcon("plus");
-		button.prepend(plusIcon);
-
-		return button;
-	}
-
 	static createTaskModal(modalType) {
 		const addTaskModal = Element.createModal(`${modalType}-task`);
 		// --Close Modal Btn--
-		const closeBtn = Element.createButton("close-modal", "close-modal");
-		const closeIcon = Element.createIcon("xmark");
-		closeBtn.append(closeIcon);
-		addTaskModal.append(closeBtn);
+		addTaskModal.append(this.createCloseModalBtn());
 
 		// --Form--
 		const form = Element.createForm(`${modalType}-task`);
@@ -140,6 +128,60 @@ class Component {
 
 		addTaskModal.append(form);
 		return addTaskModal;
+	}
+
+	static createProjectModal(modalType) {
+		const addProjectModal = Element.createModal(`${modalType}-project`);
+		// --Close Modal Btn--
+		addProjectModal.append(this.createCloseModalBtn());
+
+		// --Form--
+		const form = Element.createForm(`${modalType}-project`);
+		// Project Name
+		const titleInput = Element.createInput("text", "project-name");
+		titleInput.classList.add("title-input");
+		titleInput.setAttribute("placeholder", "Project name");
+		titleInput.setAttribute("maxlength", "50");
+		titleInput.setAttribute("required", "");
+		titleInput.setAttribute("autofocus", "");
+		form.append(titleInput);
+
+		// Submit Button
+		const submitBtn = Element.createButton("submit", "submit");
+		submitBtn.setAttribute("formmethod", "dialog");
+		submitBtn.textContent = `${
+			modalType[0].toUpperCase() + modalType.slice(1)
+		}`;
+		form.append(submitBtn);
+
+		addProjectModal.append(form);
+		return addProjectModal;
+	}
+
+	static createAddBtn(btnType) {
+		const button = Element.createButton("add", "add");
+		button.textContent = `Add ${btnType}`;
+		const plusIcon = Element.createIcon("plus");
+		button.prepend(plusIcon);
+
+		return button;
+	}
+
+	static createCloseModalBtn() {
+		const closeBtn = Element.createButton("close-modal", "close-modal");
+		const closeIcon = Element.createIcon("xmark");
+		closeBtn.append(closeIcon);
+
+		return closeBtn;
+	}
+
+	static createProjectBtn(btnName) {
+		const listEl = document.createElement("li");
+		const button = Element.createButton("project", "project");
+		button.classList.add("sidebar-btn");
+		button.textContent = btnName;
+		listEl.append(button);
+		return listEl;
 	}
 }
 

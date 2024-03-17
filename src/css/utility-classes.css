@@ -14,6 +14,11 @@
 	margin-bottom: 2.5rem;
 }
 
+.list-section-heading {
+	color: var(--clr-light);
+	font-weight: 700;
+	padding-left: 0.5rem;
+}
 /* BUTTONS */
 .add-btn {
 	background: none;

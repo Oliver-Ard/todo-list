@@ -36,11 +36,20 @@ class Display {
 				parentElement.append(editTaskModal);
 				break;
 			}
+			case "add-project-modal": {
+				const addProjectModal = Component.createProjectModal("add");
+				parentElement.append(addProjectModal);
+				break;
+			}
 		}
 	}
 
 	static renderTodo(title, description, date, priorityStatus) {
 		return Component.createTodoItem(title, description, date, priorityStatus);
+	}
+
+	static renderProject(btnName) {
+		return Component.createProjectBtn(btnName);
 	}
 }
 
