@@ -47,7 +47,7 @@ class Component {
 		editBtn.append(editIcon);
 		listItem.append(editBtn);
 
-		// --Edit Todo Button--
+		// --Remove Todo Button--
 		const deleteBtn = Element.createButton("delete", "delete-todo");
 		const deleteIcon = Element.createIcon("trash");
 		deleteBtn.append(deleteIcon);
@@ -156,6 +156,21 @@ class Component {
 
 		addProjectModal.append(form);
 		return addProjectModal;
+	}
+
+	static createProjectTitle(projectName) {
+		const wrapper = document.createElement("div");
+		wrapper.classList.add("title-wrapper");
+		// --Title--
+		const title = Element.createSectionTitle(projectName);
+		wrapper.append(title);
+		// --Delete Button--
+		const deleteBtn = Element.createButton("delete", "delete-todo");
+		const deleteIcon = Element.createIcon("trash");
+		deleteBtn.append(deleteIcon);
+		wrapper.append(deleteBtn);
+
+		return wrapper;
 	}
 
 	static createAddBtn(btnType) {

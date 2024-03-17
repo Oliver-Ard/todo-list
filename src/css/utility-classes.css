@@ -8,6 +8,15 @@
 	flex: 1;
 }
 
+.title-wrapper {
+	display: flex;
+	gap: 3rem;
+}
+
+.title-wrapper .delete-todo-btn {
+	align-self: start;
+}
+
 /* SECTIONS */
 .section-title {
 	font-size: var(--font-size-700);
@@ -81,6 +90,28 @@
 
 .submit-btn:focus {
 	outline: none;
+	box-shadow: var(--button-box-shadow-dark);
+}
+
+.delete-todo-btn {
+	background: none;
+	color: var(--clr-red);
+	font-size: var(--font-size-500);
+	padding: 0;
+	border-radius: var(--border-radius);
+	opacity: 0.7;
+
+	align-self: center;
+
+	transition: all 0.1s ease-in-out;
+}
+
+.delete-todo-btn:hover {
+	transform: scale(1.2);
+}
+
+.todo-item .delete-todo-btn:focus {
+	outline: 0;
 	box-shadow: var(--button-box-shadow-dark);
 }
 

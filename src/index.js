@@ -8,29 +8,35 @@ class App {
 	constructor() {
 		this.inbox = new TodosList("inbox");
 		this.projects = new ProjectsList();
+		this.number = 0;
 
 		this.#loadEventListeners();
 	}
 
-	#showSection(sectionName) {
+	#showSection(sectionName, targetItem) {
 		this.#showProjectsList();
-		this.#countProjectTasks("project");
-		this.#countInboxTasks("inbox");
-		console.log(this.projects.list[0].todos);
+
 		switch (sectionName) {
 			case "inbox": {
 				Display.renderInbox();
-				this.#showTasksList();
+				this.#showTasksList(this.inbox.todos);
 				break;
+			}
+			case "project": {
+				Display.renderProject(`# ${targetItem.textContent}`);
+				const projectIndex = targetItem.parentNode.dataset.index;
+				// const project = this.projects.list[targetItem.parentNode.dataset.index];
+				this.number = projectIndex;
+				this.#showTasksList(this.projects.list[projectIndex].todos);
 			}
 		}
 	}
 
-	#showTasksList() {
+	#showTasksList(listTarget) {
 		const todosListEl = document.querySelector("[data-element = 'todos-list']");
 		todosListEl.textContent = "";
 
-		for (let todo of this.inbox.todos) {
+		for (let todo of listTarget) {
 			const todoEl = Display.renderTodo(
 				todo.title,
 				todo.description,
@@ -38,7 +44,7 @@ class App {
 				todo.priorityStatus
 			);
 			// Add index for the todo to be able to manipulate it
-			todoEl.setAttribute("data-index", `${this.inbox.todos.indexOf(todo)}`);
+			todoEl.setAttribute("data-index", `${listTarget.indexOf(todo)}`);
 
 			// Change the state of the checkbox button depending on the status of the todo
 			const checkBox = todoEl.children[0];
@@ -49,6 +55,8 @@ class App {
 			}
 			todosListEl.append(todoEl);
 		}
+		this.#countItems("inbox");
+		this.#countItems("project");
 	}
 
 	#showProjectsList() {
@@ -58,7 +66,7 @@ class App {
 		projectsListEl.textContent = "";
 
 		for (let project of this.projects.list) {
-			const projectEl = Display.renderProject(project.name);
+			const projectEl = Display.addProjectBtn(project.name);
 			// Add index for the todo to be able to manipulate it
 			projectEl.setAttribute(
 				"data-index",
@@ -80,7 +88,9 @@ class App {
 
 			const project = new TodosList(projectName.value);
 			this.projects.addProject(project);
-			this.#showSection("inbox");
+
+			this.#showProjectsList();
+			this.#countItems("project");
 		});
 	}
 
@@ -103,7 +113,8 @@ class App {
 
 			this.inbox.addTodo(task);
 
-			this.#showSection("inbox");
+			this.#removeModal();
+			this.#showTasksList(this.inbox.todos);
 		});
 	}
 
@@ -133,7 +144,8 @@ class App {
 				priorityStatus.value
 			);
 
-			this.#showTasksList();
+			this.#removeModal();
+			this.#showTasksList(this.inbox.todos);
 		});
 	}
 
@@ -141,7 +153,7 @@ class App {
 		const taskIndex = targetItem.parentNode.dataset.index;
 		this.inbox.removeTodo(taskIndex);
 
-		this.#showSection("inbox");
+		this.#showTasksList(this.inbox.todos);
 	}
 
 	#toggleTaskStatus(targetItem) {
@@ -153,24 +165,25 @@ class App {
 		}
 	}
 
-	#countInboxTasks(btnName) {
-		const listLength = this.inbox.todos.length;
-		const button = document.querySelector(`[data-button = ${btnName}]`);
-		button.dataset.content = listLength;
+	#countItems(btnName) {
+		if (btnName === "inbox") {
+			const listLength = this.inbox.todos.length;
+			const button = document.querySelector(`[data-button = ${btnName}]`);
+			button.dataset.content = listLength;
+		} else if (btnName === "project") {
+			const buttons = this.#getProjectsListBtns();
+			buttons.forEach((button, index) => {
+				const projectIndex = index;
+				const projectTodos = this.projects.list[projectIndex].todos;
+				const projectTodosNr = projectTodos.length;
+
+				button.dataset.content = projectTodosNr;
+			});
+		}
 	}
 
-	#countProjectTasks(btnName) {
-		const buttons = Array.from(
-			document.querySelectorAll(`[data-button = ${btnName}]`)
-		);
-
-		buttons.forEach((button, index) => {
-			const projectIndex = index;
-			const projectTodos = this.projects.list[projectIndex].todos;
-			const projectTodosNr = projectTodos.length;
-
-			button.dataset.content = projectTodosNr;
-		});
+	#getProjectsListBtns() {
+		return Array.from(document.querySelectorAll("[data-button = project]"));
 	}
 
 	// HELPER METHODS
@@ -189,6 +202,10 @@ class App {
 				this.#showSection("inbox");
 				break;
 			}
+			case "project": {
+				this.#showSection("project", target);
+				break;
+			}
 			case "add-project": {
 				Display.renderModal("add-project-modal", Display.content);
 				this.#addProject();
@@ -198,7 +215,9 @@ class App {
 			// Main Content Buttons
 			case "add": {
 				Display.renderModal("add-modal", Display.content);
+
 				this.#addTask();
+				console.log(this.number);
 				this.#openModal();
 				break;
 			}
@@ -304,3 +323,6 @@ app.inbox.addTodo(
 
 app.projects.addProject(new TodosList("Bills"));
 app.projects.list[0].addTodo(new Todo("test"));
+app.projects.list[0].addTodo(new Todo("test"));
+app.projects.addProject(new TodosList("Health"));
+app.projects.list[1].addTodo(new Todo("test"));

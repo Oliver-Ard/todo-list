@@ -60,8 +60,7 @@
 }
 
 /* --Buttons-- */
-.todo-item .edit-todo-btn,
-.todo-item .delete-todo-btn {
+.todo-item .edit-todo-btn {
 	background: none;
 	font-size: var(--font-size-500);
 	padding: 0;
@@ -74,13 +73,11 @@
 }
 
 .todo-item .edit-todo-btn:hover,
-.todo-item .delete-todo-btn:hover,
 .todo-item .check-btn:hover {
 	transform: scale(1.2);
 }
 
 .todo-item .edit-todo-btn:focus,
-.todo-item .delete-todo-btn:focus,
 .todo-item .check-btn:focus {
 	outline: 0;
 	box-shadow: var(--button-box-shadow-dark);
@@ -88,10 +85,6 @@
 
 .todo-item .edit-todo-btn {
 	color: var(--clr-dark);
-}
-
-.todo-item .delete-todo-btn {
-	color: var(--clr-red);
 }
 
 /* --Check Button-- */
