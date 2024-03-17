@@ -4,14 +4,12 @@ import Display from "./components/Display.js";
 import "./main.css";
 
 class App {
-	#display;
 	#sidebar;
 	#todos;
 
 	constructor() {
-		this.#todos = new TodosList();
-		this.#display = new Display();
 		this.#sidebar = document.querySelector("#sidebar");
+		this.#todos = new TodosList();
 
 		this.#loadEventListeners();
 	}
@@ -20,8 +18,7 @@ class App {
 		// Select Section to show
 		switch (sectionName) {
 			case "inbox": {
-				this.#display.renderInbox();
-				this.#addTask();
+				Display.renderInbox();
 				this.#showTasksList();
 				break;
 			}
@@ -33,7 +30,7 @@ class App {
 		todosListEl.textContent = "";
 
 		for (let todo of this.#todos.list) {
-			const todoEl = this.#display.renderTodo(
+			const todoEl = Display.renderTodo(
 				todo.title,
 				todo.description,
 				todo.dueDate,
@@ -53,29 +50,56 @@ class App {
 		}
 	}
 
-	#toggleTaskStatus(targetItem) {
-		const taskIndex = targetItem.parentNode.dataset.index;
-		if (!targetItem.checked) {
-			this.#todos.list[taskIndex].updateTodoStatus("unfinished");
-		} else {
-			this.#todos.list[taskIndex].updateTodoStatus("finished");
-		}
-	}
-
 	#addTask() {
 		const addTaskForm = document.querySelector("[data-form = 'add-task']");
 
 		addTaskForm.addEventListener("submit", () => {
-			// Get Elements
-			const taskName = document.querySelector("#task-name").value;
-			const taskDescription = document.querySelector("#task-description").value;
-			const dueDate = document.querySelector("#due-date").value;
-			const priorityStatus = document.querySelector("#priority-status").value;
+			// Get Inputs
+			const taskName = document.querySelector("#task-name");
+			const taskDescription = document.querySelector("#task-description");
+			const dueDate = document.querySelector("#due-date");
+			const priorityStatus = document.querySelector("#priority-status");
 			// Add Task
-			const task = new Todo(taskName, taskDescription, dueDate, priorityStatus);
+			const task = new Todo(
+				taskName.value,
+				taskDescription.value,
+				dueDate.value,
+				priorityStatus.value
+			);
 
 			this.#todos.addTodo(task);
 			addTaskForm.reset();
+
+			this.#showTasksList();
+			this.#removeModal();
+		});
+	}
+
+	#editTask(targetItem) {
+		// Get Todo Item
+		const todoIndex = targetItem.parentNode.dataset.index;
+		const todoToEdit = this.#todos.list[todoIndex];
+		// Get Form
+		const editTaskForm = document.querySelector("[data-form = 'edit-task']");
+		// Get Inputs
+		const taskName = document.querySelector("#task-name");
+		const taskDescription = document.querySelector("#task-description");
+		const dueDate = document.querySelector("#due-date");
+		const priorityStatus = document.querySelector("#priority-status");
+		// Get Current Value Inputs
+		taskName.value = todoToEdit.title;
+		taskDescription.value = todoToEdit.description;
+		dueDate.value = todoToEdit.dueDate;
+		priorityStatus.value = todoToEdit.priorityStatus;
+
+		editTaskForm.addEventListener("submit", () => {
+			// Update with new values
+			todoToEdit.editTodo(
+				taskName.value,
+				taskDescription.value,
+				dueDate.value,
+				priorityStatus.value
+			);
 
 			this.#showTasksList();
 		});
@@ -86,6 +110,15 @@ class App {
 		this.#todos.removeTodo(taskIndex);
 
 		this.#showTasksList();
+	}
+
+	#toggleTaskStatus(targetItem) {
+		const taskIndex = targetItem.parentNode.dataset.index;
+		if (!targetItem.checked) {
+			this.#todos.list[taskIndex].updateTodoStatus("unfinished");
+		} else {
+			this.#todos.list[taskIndex].updateTodoStatus("finished");
+		}
 	}
 
 	// HELPER METHODS
@@ -109,14 +142,22 @@ class App {
 	// --Main Content Buttons Handler--
 	#clickMainContentBtn(e) {
 		const target = e.target;
+		// We also target the parent because some buttons have icons, and the data attr is on the button
 		const targetParent = e.target.parentNode;
-
 		switch (target.dataset.button || targetParent.dataset.button) {
 			case "add": {
-				this.#toggleModal("add-task");
+				Display.renderModal("add-modal", this.#getSection("inbox"));
+				this.#addTask();
+				this.#openModal();
 				break;
 			}
-			case "delete-todo": {
+			case "edit": {
+				Display.renderModal("edit-modal", this.#getSection("inbox"));
+				this.#editTask(targetParent);
+				this.#openModal();
+				break;
+			}
+			case "delete": {
 				this.#deleteTask(targetParent);
 				break;
 			}
@@ -125,27 +166,39 @@ class App {
 				break;
 			}
 			case "close-modal": {
-				this.#toggleModal("add-task");
+				this.#removeModal();
 				break;
 			}
 		}
 	}
 
-	#toggleModal(modalName) {
-		switch (modalName) {
-			case "add-task": {
-				const addTaskModal = document.querySelector("#add-task-modal");
-				if (!addTaskModal.open) {
-					addTaskModal.showModal();
-				} else {
-					addTaskModal.close();
-				}
+	#openModal() {
+		const modal = document.querySelector("dialog");
+		// Overwrite the default escape key behavior for the modal to delete the modal.
+		modal.addEventListener("keydown", (e) => {
+			if (e.key === `Escape`) {
+				this.#removeModal();
 			}
+		});
+
+		modal.showModal();
+	}
+
+	#removeModal() {
+		const sectionToCheck = Display.content.childNodes[0];
+		const modalToCheck = document.querySelector("dialog");
+
+		if (sectionToCheck.contains(modalToCheck)) {
+			sectionToCheck.removeChild(modalToCheck);
 		}
 	}
 
 	#toggleSidebar() {
 		this.#sidebar.classList.toggle("active");
+	}
+
+	#getSection(element) {
+		return document.querySelector(`#${element}`);
 	}
 
 	#loadEventListeners() {
@@ -154,7 +207,7 @@ class App {
 		});
 
 		this.#sidebar.addEventListener("click", this.#clickSidebarBtn.bind(this));
-		this.#display.content.addEventListener(
+		Display.content.addEventListener(
 			"click",
 			this.#clickMainContentBtn.bind(this)
 		);

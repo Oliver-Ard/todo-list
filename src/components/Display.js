@@ -3,17 +3,14 @@ import Element from "./Element.js";
 
 // Class for rendering sections
 class Display {
-	#content;
-	constructor() {
-		this.#content = document.querySelector("#content");
+	static #content = document.querySelector("#content");
+
+	static get content() {
+		return Display.#content;
 	}
 
-	get content() {
-		return this.#content;
-	}
-
-	renderInbox() {
-		this.#content.textContent = "";
+	static renderInbox() {
+		Display.#content.textContent = "";
 
 		const inbox = Element.createSection("inbox");
 		const title = Element.createSectionTitle("Inbox");
@@ -24,12 +21,25 @@ class Display {
 		inbox.append(todosList);
 		const addTaskBtn = Component.createAddBtn("task");
 		inbox.append(addTaskBtn);
-		const addTaskModal = Component.createAddTaskModal();
-		inbox.append(addTaskModal);
-		this.#content.append(inbox);
+		Display.#content.append(inbox);
 	}
 
-	renderTodo(title, description, date, priorityStatus) {
+	static renderModal(modalType, parentElement) {
+		switch (modalType) {
+			case "add-modal": {
+				const addTaskModal = Component.createTaskModal("add");
+				parentElement.append(addTaskModal);
+				break;
+			}
+			case "edit-modal": {
+				const editTaskModal = Component.createTaskModal("edit");
+				parentElement.append(editTaskModal);
+				break;
+			}
+		}
+	}
+
+	static renderTodo(title, description, date, priorityStatus) {
 		return Component.createTodoItem(title, description, date, priorityStatus);
 	}
 }

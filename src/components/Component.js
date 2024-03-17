@@ -9,9 +9,8 @@ class Component {
 		listItem.dataset.element = "todo-item";
 
 		// --Checkbox--
-		const checkBox = document.createElement("input");
+		const checkBox = Element.createInput("checkbox", "cross-todo");
 		checkBox.classList.add("check-btn");
-		checkBox.setAttribute("type", "checkbox");
 		checkBox.dataset.button = "check";
 		listItem.append(checkBox);
 
@@ -19,9 +18,8 @@ class Component {
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("wrapper");
 		// Todo Title
-		const todoTitle = document.createElement("label");
-		todoTitle.classList.add("todo-item-title");
-		todoTitle.textContent = title;
+		const todoTitle = Element.createLabel(title, "#", "todo-item-title");
+		todoTitle.dataset.button = "edit";
 		wrapper.append(todoTitle);
 		// Todo Description
 		const todoDescription = document.createElement("p");
@@ -44,13 +42,13 @@ class Component {
 		listItem.append(wrapper);
 
 		// --Edit Todo Button--
-		const editBtn = Element.createButton("edit-todo");
+		const editBtn = Element.createButton("edit", "edit-todo");
 		const editIcon = Element.createIcon("pen-to-square");
 		editBtn.append(editIcon);
 		listItem.append(editBtn);
 
 		// --Edit Todo Button--
-		const deleteBtn = Element.createButton("delete-todo");
+		const deleteBtn = Element.createButton("delete", "delete-todo");
 		const deleteIcon = Element.createIcon("trash");
 		deleteBtn.append(deleteIcon);
 		listItem.append(deleteBtn);
@@ -59,7 +57,7 @@ class Component {
 	}
 
 	static createAddBtn(btnType) {
-		const button = Element.createButton("add");
+		const button = Element.createButton("add", "add");
 		button.textContent = `Add ${btnType}`;
 		const plusIcon = Element.createIcon("plus");
 		button.prepend(plusIcon);
@@ -67,16 +65,16 @@ class Component {
 		return button;
 	}
 
-	static createAddTaskModal() {
-		const addTaskModal = Element.createModal("add-task");
+	static createTaskModal(modalType) {
+		const addTaskModal = Element.createModal(`${modalType}-task`);
 		// --Close Modal Btn--
-		const closeBtn = Element.createButton("close-modal");
+		const closeBtn = Element.createButton("close-modal", "close-modal");
 		const closeIcon = Element.createIcon("xmark");
 		closeBtn.append(closeIcon);
 		addTaskModal.append(closeBtn);
 
 		// --Form--
-		const form = Element.createForm("add-task");
+		const form = Element.createForm(`${modalType}-task`);
 		// Title Input
 		const titleInput = Element.createInput("text", "task-name");
 		titleInput.classList.add("title-input");
@@ -133,9 +131,11 @@ class Component {
 		wrapper.append(selectPriorityStatus);
 		form.append(wrapper);
 		// Submit Button
-		const submitBtn = Element.createButton("submit");
+		const submitBtn = Element.createButton("submit", "submit");
 		submitBtn.setAttribute("formmethod", "dialog");
-		submitBtn.textContent = "Add";
+		submitBtn.textContent = `${
+			modalType[0].toUpperCase() + modalType.slice(1)
+		}`;
 		form.append(submitBtn);
 
 		addTaskModal.append(form);

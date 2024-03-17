@@ -29,6 +29,13 @@ class Todo {
 		return this.#status;
 	}
 
+	editTodo(newTitle, newDescription, newDueDate, newPriorityStatus) {
+		this.#title = newTitle;
+		this.#description = newDescription;
+		this.#dueDate = newDueDate;
+		this.#priorityStatus = newPriorityStatus;
+	}
+
 	updateTodoStatus(newState) {
 		if (newState === "finished" || newState === "unfinished") {
 			this.#status = newState;
@@ -44,26 +51,26 @@ class TodosList {
 			new Todo(
 				"Complete JavaScript Fundamentals",
 				"Finish reading and practicing JavaScript basics, including variables, data types, and operators.",
-				"March 20, 2024",
+				"2024-03-20",
 				"High"
 			),
 			new Todo(
 				"Build Portfolio Website",
 				"Develop a personal portfolio website showcasing projects and skills using HTML, CSS, and JavaScript.",
-				"April 10, 2024",
+				"2024-04-10",
 				"Medium"
 			),
-			new Todo("Practice Algorithm Challenges", null, "March 25, 2024", "Low"),
+			new Todo("Practice Algorithm Challenges", null, "2024-08-09", "Low"),
 			new Todo(
 				"Study Node.js",
 				" Learn Node.js by following tutorials and building small projects to understand server-side JavaScript development.",
-				"May 5, 2024",
+				"2024-05-05",
 				"Medium"
 			),
 			new Todo(
 				"Update GitHub Repositories",
 				"Push recent code changes to GitHub repositories and ensure documentation is up to date.",
-				"April 5, 2024",
+				"2024-06-12",
 				"Low"
 			),
 		];
@@ -83,17 +90,6 @@ class TodosList {
 
 	removeTodo(index) {
 		return this.#list.splice(index, 1);
-	}
-
-	editTodo(index, newTitle, newDescription, newDueDate, newPriorityStatus) {
-		const todo = this.#list[index];
-
-		todo.title = newTitle;
-		todo.description = newDescription;
-		todo.dueDate = newDueDate;
-		todo.priorityStatus = newPriorityStatus;
-
-		return todo;
 	}
 }
 

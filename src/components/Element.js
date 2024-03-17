@@ -31,9 +31,9 @@ class Element {
 		return ul;
 	}
 
-	static createButton(buttonName) {
+	static createButton(buttonName, buttonClass) {
 		const button = document.createElement("button");
-		button.classList.add(`${buttonName}-btn`);
+		button.classList.add(`${buttonClass}-btn`);
 		button.dataset.button = buttonName;
 
 		return button;
