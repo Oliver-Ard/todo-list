@@ -15,10 +15,10 @@ class App {
 	}
 
 	#showSection(sectionName) {
-		// Select Section to show
 		switch (sectionName) {
 			case "inbox": {
 				Display.renderInbox();
+				this.#countTasks("inbox");
 				this.#showTasksList();
 				break;
 			}
@@ -70,7 +70,7 @@ class App {
 			this.#todos.addTodo(task);
 			addTaskForm.reset();
 
-			this.#showTasksList();
+			this.#showSection("inbox");
 			this.#removeModal();
 		});
 	}
@@ -109,7 +109,7 @@ class App {
 		const taskIndex = targetItem.parentNode.dataset.index;
 		this.#todos.removeTodo(taskIndex);
 
-		this.#showTasksList();
+		this.#showSection("inbox");
 	}
 
 	#toggleTaskStatus(targetItem) {
@@ -119,6 +119,12 @@ class App {
 		} else {
 			this.#todos.list[taskIndex].updateTodoStatus("finished");
 		}
+	}
+
+	#countTasks(btnName) {
+		const listLength = this.#todos.list.length;
+		const button = document.querySelector(`[data-button = ${btnName}]`);
+		button.dataset.content = listLength;
 	}
 
 	// HELPER METHODS
