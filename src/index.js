@@ -232,6 +232,15 @@ class App {
 		});
 	}
 
+	#deleteProject() {
+		const projectIndex = this.#currentSection.parentElement.dataset.index;
+		this.projects.removeProject(projectIndex);
+		// Update the current section to be the inbox, to remove the 'active' class of a project element
+		this.#currentSection = document.querySelector("[data-button='inbox']");
+		this.#showProjectsList();
+		this.#showSection("inbox");
+	}
+
 	#toggleTaskStatus(targetItem) {
 		const section = this.#currentSection.dataset.button;
 		const taskIndex = targetItem.parentNode.dataset.index;
@@ -304,6 +313,15 @@ class App {
 			}
 			case "delete": {
 				this.#deleteTask(targetParent);
+				break;
+			}
+			case "delete-project": {
+				Display.renderModal("delete-project-modal", Display.content);
+				this.#openModal();
+				break;
+			}
+			case "confirm": {
+				this.#deleteProject();
 				break;
 			}
 			case "check": {

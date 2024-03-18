@@ -79,6 +79,13 @@ class Component {
 		form.append(descriptionInput);
 		// Wrapper
 		const wrapper = document.createElement("div");
+		// Label for Due Date
+		const labelDueDate = Element.createLabel(
+			"Due Date:",
+			"due-date",
+			"due-date-label"
+		);
+		wrapper.append(labelDueDate);
 		//Date Input
 		const dateInput = Element.createInput("date", "due-date");
 		wrapper.append(dateInput);
@@ -158,6 +165,24 @@ class Component {
 		return addProjectModal;
 	}
 
+	static createDeleteModal(objToDelete) {
+		const deleteModal = Element.createModal(`delete-${objToDelete}`);
+		// --Close Modal Btn--
+		deleteModal.append(this.createCloseModalBtn());
+		// --Question--
+		const question = Element.createSectionTitle(
+			`Are you sure you want to delete this ${objToDelete}? This action cannot be undone.`
+		);
+		question.classList.add("confirm-msg");
+		deleteModal.append(question);
+		// Confirm Button
+		const confirmBtn = Element.createButton("confirm", "confirm");
+		confirmBtn.textContent = "Confirm Deletion";
+		deleteModal.append(confirmBtn);
+
+		return deleteModal;
+	}
+
 	static createProjectTitle(projectName) {
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("title-wrapper");
@@ -165,7 +190,7 @@ class Component {
 		const title = Element.createSectionTitle(projectName);
 		wrapper.append(title);
 		// --Delete Button--
-		const deleteBtn = Element.createButton("delete", "delete-todo");
+		const deleteBtn = Element.createButton("delete-project", "delete-todo");
 		const deleteIcon = Element.createIcon("trash");
 		deleteBtn.append(deleteIcon);
 		wrapper.append(deleteBtn);

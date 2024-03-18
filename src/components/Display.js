@@ -62,6 +62,11 @@ class Display {
 				parentElement.append(addProjectModal);
 				break;
 			}
+			case "delete-project-modal": {
+				const deleteProjectModal = Component.createDeleteModal("project");
+				parentElement.append(deleteProjectModal);
+				break;
+			}
 		}
 	}
 

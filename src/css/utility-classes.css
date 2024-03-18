@@ -28,6 +28,11 @@
 	font-weight: 700;
 	padding-left: 0.5rem;
 }
+
+.confirm-msg {
+	text-align: center;
+	font-size: var(--font-size-600);
+}
 /* BUTTONS */
 .add-btn {
 	background: none;
@@ -73,7 +78,8 @@
 	outline: 0;
 }
 
-.submit-btn {
+.submit-btn,
+.confirm-btn {
 	background: var(--clr-red);
 	color: var(--clr-light);
 	font-weight: 500;
@@ -84,13 +90,20 @@
 	transition: all 0.15s ease-in-out;
 }
 
-.submit-btn:hover {
+.submit-btn:hover,
+.confirm-btn:hover {
 	transform: scale(1.1);
 }
 
-.submit-btn:focus {
+.submit-btn:focus,
+.confirm-btn:focus {
 	outline: none;
 	box-shadow: var(--button-box-shadow-dark);
+}
+
+.confirm-btn {
+	display: block;
+	margin: 0 auto;
 }
 
 .delete-todo-btn {
@@ -118,7 +131,7 @@
 /* MODAL */
 .modal {
 	width: min(80%, 40rem);
-	padding: 1rem;
+	padding: 2rem;
 	border: none;
 	border-radius: var(--border-radius);
 
