@@ -5,31 +5,37 @@ import Display from "./components/Display.js";
 import "./main.css";
 
 class App {
+	#currentSection;
 	constructor() {
 		this.inbox = new TodosList("inbox");
 		this.projects = new ProjectsList();
-		this.number = 0;
+		this.#currentSection = document.querySelector("[data-button = 'inbox']");
 
 		this.#loadEventListeners();
 	}
 
-	#showSection(sectionName, targetItem) {
-		this.#showProjectsList();
-
+	#showSection(sectionName, targetItem = this.#currentSection) {
 		switch (sectionName) {
 			case "inbox": {
+				this.#currentSection = targetItem;
+
 				Display.renderInbox();
+				this.#toggleInboxBtnState("active");
 				this.#showTasksList(this.inbox.todos);
 				break;
 			}
 			case "project": {
+				this.#currentSection = targetItem;
+
 				Display.renderProject(`# ${targetItem.textContent}`);
+				this.#toggleInboxBtnState("inactive");
 				const projectIndex = targetItem.parentNode.dataset.index;
-				// const project = this.projects.list[targetItem.parentNode.dataset.index];
-				this.number = projectIndex;
 				this.#showTasksList(this.projects.list[projectIndex].todos);
 			}
 		}
+
+		this.#showProjectsList();
+		this.#countItems("project");
 	}
 
 	#showTasksList(listTarget) {
@@ -59,42 +65,7 @@ class App {
 		this.#countItems("project");
 	}
 
-	#showProjectsList() {
-		const projectsListEl = document.querySelector(
-			"[data-element = 'projects']"
-		);
-		projectsListEl.textContent = "";
-
-		for (let project of this.projects.list) {
-			const projectEl = Display.addProjectBtn(project.name);
-			// Add index for the todo to be able to manipulate it
-			projectEl.setAttribute(
-				"data-index",
-				`${this.projects.list.indexOf(project)}`
-			);
-
-			projectsListEl.append(projectEl);
-		}
-	}
-
-	#addProject() {
-		const addProjectForm = document.querySelector(
-			"[data-form = 'add-project']"
-		);
-
-		addProjectForm.addEventListener("submit", () => {
-			// Get Input
-			const projectName = document.querySelector("#project-name");
-
-			const project = new TodosList(projectName.value);
-			this.projects.addProject(project);
-
-			this.#showProjectsList();
-			this.#countItems("project");
-		});
-	}
-
-	#addTask() {
+	#addTask(sectionBtn) {
 		const addTaskForm = document.querySelector("[data-form = 'add-task']");
 
 		addTaskForm.addEventListener("submit", () => {
@@ -110,11 +81,23 @@ class App {
 				dueDate.value,
 				priorityStatus.value
 			);
-
-			this.inbox.addTodo(task);
+			// Check the current section, add the task of the current section and render the correct list
+			const section = sectionBtn.dataset.button;
+			switch (section) {
+				case "inbox": {
+					this.inbox.addTodo(task);
+					this.#showTasksList(this.inbox.todos);
+					break;
+				}
+				case "project": {
+					const projectIndex = sectionBtn.parentNode.dataset.index;
+					const currentProject = this.projects.list[projectIndex];
+					currentProject.addTodo(task);
+					this.#showTasksList(currentProject.todos);
+				}
+			}
 
 			this.#removeModal();
-			this.#showTasksList(this.inbox.todos);
 		});
 	}
 
@@ -156,38 +139,98 @@ class App {
 		this.#showTasksList(this.inbox.todos);
 	}
 
-	#toggleTaskStatus(targetItem) {
-		const taskIndex = targetItem.parentNode.dataset.index;
-		if (!targetItem.checked) {
-			this.inbox.todos[taskIndex].updateTodoStatus("unfinished");
-		} else {
-			this.inbox.todos[taskIndex].updateTodoStatus("finished");
-		}
-	}
-
 	#countItems(btnName) {
-		if (btnName === "inbox") {
-			const listLength = this.inbox.todos.length;
-			const button = document.querySelector(`[data-button = ${btnName}]`);
-			button.dataset.content = listLength;
-		} else if (btnName === "project") {
-			const buttons = this.#getProjectsListBtns();
-			buttons.forEach((button, index) => {
-				const projectIndex = index;
-				const projectTodos = this.projects.list[projectIndex].todos;
-				const projectTodosNr = projectTodos.length;
-
-				button.dataset.content = projectTodosNr;
-			});
+		switch (btnName) {
+			case "inbox": {
+				const listLength = this.inbox.todos.length;
+				const button = document.querySelector(`[data-button = ${btnName}]`);
+				button.dataset.content = listLength;
+				break;
+			}
+			case "project": {
+				const buttons = Array.from(
+					document.querySelectorAll("[data-button = project]")
+				);
+				buttons.forEach((button, index) => {
+					const projectIndex = index;
+					const projectTodos = this.projects.list[projectIndex].todos;
+					const projectTodosNr = projectTodos.length;
+					button.dataset.content = projectTodosNr;
+				});
+				break;
+			}
 		}
 	}
 
-	#getProjectsListBtns() {
-		return Array.from(document.querySelectorAll("[data-button = project]"));
+	#showProjectsList() {
+		const projectsListEl = document.querySelector("[data-element='projects']");
+		projectsListEl.textContent = "";
+
+		for (let project of this.projects.list) {
+			const projectEl = Display.addProjectBtn(project.name);
+			const projectIndex = this.projects.list.indexOf(project);
+
+			// Check if this project is the current active project
+			if (projectIndex === +this.#currentSection.parentNode.dataset.index) {
+				projectEl.children[0].classList.add("active");
+			}
+
+			// Add index for the todo to be able to manipulate it
+			projectEl.setAttribute("data-index", projectIndex);
+			projectsListEl.append(projectEl);
+		}
+	}
+
+	#addProject() {
+		const addProjectForm = document.querySelector(
+			"[data-form = 'add-project']"
+		);
+
+		addProjectForm.addEventListener("submit", () => {
+			// Get Input
+			const projectName = document.querySelector("#project-name");
+
+			const project = new TodosList(projectName.value);
+			this.projects.addProject(project);
+
+			this.#showProjectsList();
+			this.#countItems("project");
+			this.#removeModal();
+		});
+	}
+
+	#toggleTaskStatus(targetItem) {
+		const section = this.#currentSection.dataset.button;
+		const taskIndex = targetItem.parentNode.dataset.index;
+
+		switch (section) {
+			case "inbox": {
+				this.inbox.todos[taskIndex].updateTodoStatus(
+					targetItem.checked ? "finished" : "unfinished"
+				);
+				break;
+			}
+			case "project": {
+				const projectIndex = this.#currentSection.parentNode.dataset.index;
+				this.projects.list[projectIndex].todos[taskIndex].updateTodoStatus(
+					targetItem.checked ? "finished" : "unfinished"
+				);
+				break;
+			}
+		}
+	}
+
+	#toggleInboxBtnState(state) {
+		const inboxBtn = document.querySelector("[data-button='inbox']");
+		if (state === "active") {
+			inboxBtn.classList.add("active");
+		} else {
+			inboxBtn.classList.remove("active");
+		}
 	}
 
 	// HELPER METHODS
-	// Buttons Handler
+	// --Buttons Handler--
 	#handleDocumentBtns(e) {
 		const target = e.target;
 		// We also target the parent because some buttons have icons, and the data attr is on the button
@@ -199,7 +242,7 @@ class App {
 				break;
 			}
 			case "inbox": {
-				this.#showSection("inbox");
+				this.#showSection("inbox", target);
 				break;
 			}
 			case "project": {
@@ -216,8 +259,7 @@ class App {
 			case "add": {
 				Display.renderModal("add-modal", Display.content);
 
-				this.#addTask();
-				console.log(this.number);
+				this.#addTask(this.#currentSection);
 				this.#openModal();
 				break;
 			}
