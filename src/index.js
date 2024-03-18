@@ -17,6 +17,7 @@ class App {
 	#showSection(sectionName, targetItem = this.#currentSection) {
 		switch (sectionName) {
 			case "inbox": {
+				// Get current section
 				this.#currentSection = targetItem;
 
 				Display.renderInbox();
@@ -25,6 +26,7 @@ class App {
 				break;
 			}
 			case "project": {
+				// Get current section
 				this.#currentSection = targetItem;
 
 				Display.renderProject(`# ${targetItem.textContent}`);
@@ -38,6 +40,7 @@ class App {
 		this.#countItems("project");
 	}
 
+	// --TASKS--
 	#showTasksList(listTarget) {
 		const todosListEl = document.querySelector("[data-element = 'todos-list']");
 		todosListEl.textContent = "";
@@ -68,7 +71,8 @@ class App {
 	#addTask(sectionBtn) {
 		const addTaskForm = document.querySelector("[data-form = 'add-task']");
 
-		addTaskForm.addEventListener("submit", () => {
+		addTaskForm.addEventListener("submit", (e) => {
+			e.preventDefault();
 			// Get Inputs
 			const taskName = document.querySelector("#task-name");
 			const taskDescription = document.querySelector("#task-description");
@@ -131,7 +135,8 @@ class App {
 		dueDate.value = todoToEdit.dueDate;
 		priorityStatus.value = todoToEdit.priorityStatus;
 
-		editTaskForm.addEventListener("submit", () => {
+		editTaskForm.addEventListener("submit", (e) => {
+			e.preventDefault();
 			// Update with new values
 			todoToEdit.editTodo(
 				taskName.value,
@@ -172,29 +177,7 @@ class App {
 		}
 	}
 
-	#countItems(btnName) {
-		switch (btnName) {
-			case "inbox": {
-				const listLength = this.inbox.todos.length;
-				const button = document.querySelector(`[data-button = ${btnName}]`);
-				button.dataset.content = listLength;
-				break;
-			}
-			case "project": {
-				const buttons = Array.from(
-					document.querySelectorAll("[data-button = project]")
-				);
-				buttons.forEach((button, index) => {
-					const projectIndex = index;
-					const projectTodos = this.projects.list[projectIndex].todos;
-					const projectTodosNr = projectTodos.length;
-					button.dataset.content = projectTodosNr;
-				});
-				break;
-			}
-		}
-	}
-
+	// --PROJECTS--
 	#showProjectsList() {
 		const projectsListEl = document.querySelector("[data-element='projects']");
 		projectsListEl.textContent = "";
@@ -219,7 +202,8 @@ class App {
 			"[data-form = 'add-project']"
 		);
 
-		addProjectForm.addEventListener("submit", () => {
+		addProjectForm.addEventListener("submit", (e) => {
+			e.preventDefault();
 			// Get Input
 			const projectName = document.querySelector("#project-name");
 
@@ -232,6 +216,28 @@ class App {
 		});
 	}
 
+	#editProjectName() {
+		const projectIndex = this.#currentSection.parentNode.dataset.index;
+		const currentProject = this.projects.list[projectIndex];
+		// Get Form and Input
+		const editProjectForm = document.querySelector(
+			"[data-form = 'edit-project']"
+		);
+		const projectName = document.querySelector("#project-name");
+		projectName.value = currentProject.name;
+
+		editProjectForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			// Update with new value
+			currentProject.editList(projectName.value);
+
+			// Show the project section
+			Display.renderProject(`# ${projectName.value}`);
+			this.#showTasksList(this.projects.list[projectIndex].todos);
+			this.#showProjectsList();
+		});
+	}
+
 	#deleteProject() {
 		const projectIndex = this.#currentSection.parentElement.dataset.index;
 		this.projects.removeProject(projectIndex);
@@ -239,6 +245,29 @@ class App {
 		this.#currentSection = document.querySelector("[data-button='inbox']");
 		this.#showProjectsList();
 		this.#showSection("inbox");
+	}
+
+	#countItems(btnName) {
+		switch (btnName) {
+			case "inbox": {
+				const listLength = this.inbox.todos.length;
+				const button = document.querySelector(`[data-button = ${btnName}]`);
+				button.dataset.content = listLength;
+				break;
+			}
+			case "project": {
+				const buttons = Array.from(
+					document.querySelectorAll("[data-button = project]")
+				);
+				buttons.forEach((button, index) => {
+					const projectIndex = index;
+					const projectTodos = this.projects.list[projectIndex].todos;
+					const projectTodosNr = projectTodos.length;
+					button.dataset.content = projectTodosNr;
+				});
+				break;
+			}
+		}
 	}
 
 	#toggleTaskStatus(targetItem) {
@@ -308,6 +337,12 @@ class App {
 			case "edit": {
 				Display.renderModal("edit-modal", Display.content);
 				this.#editTask(targetParent);
+				this.#openModal();
+				break;
+			}
+			case "edit-project": {
+				Display.renderModal("edit-project-modal", Display.content);
+				this.#editProjectName();
 				this.#openModal();
 				break;
 			}

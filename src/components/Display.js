@@ -48,23 +48,28 @@ class Display {
 	static renderModal(modalType, parentElement) {
 		switch (modalType) {
 			case "add-modal": {
-				const addTaskModal = Component.createTaskModal("add");
-				parentElement.append(addTaskModal);
+				const modal = Component.createTaskModal("add");
+				parentElement.append(modal);
 				break;
 			}
 			case "edit-modal": {
-				const editTaskModal = Component.createTaskModal("edit");
-				parentElement.append(editTaskModal);
+				const modal = Component.createTaskModal("edit");
+				parentElement.append(modal);
 				break;
 			}
 			case "add-project-modal": {
-				const addProjectModal = Component.createProjectModal("add");
-				parentElement.append(addProjectModal);
+				const modal = Component.createProjectModal("add");
+				parentElement.append(modal);
 				break;
 			}
 			case "delete-project-modal": {
-				const deleteProjectModal = Component.createDeleteModal("project");
-				parentElement.append(deleteProjectModal);
+				const modal = Component.createDeleteModal("project");
+				parentElement.append(modal);
+				break;
+			}
+			case "edit-project-modal": {
+				const modal = Component.createProjectModal("edit");
+				parentElement.append(modal);
 				break;
 			}
 		}

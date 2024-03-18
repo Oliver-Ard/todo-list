@@ -33,6 +33,15 @@
 	text-align: center;
 	font-size: var(--font-size-600);
 }
+
+.edit-title {
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+
+.edit-title:hover {
+	transform: scale(1.1);
+}
 /* BUTTONS */
 .add-btn {
 	background: none;

@@ -71,6 +71,10 @@ class TodosList {
 	removeTodo(index) {
 		return this.#todos.splice(index, 1);
 	}
+
+	editList(newName) {
+		return (this.#name = newName);
+	}
 }
 
 export { Todo, TodosList };

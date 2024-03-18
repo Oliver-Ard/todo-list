@@ -188,6 +188,8 @@ class Component {
 		wrapper.classList.add("title-wrapper");
 		// --Title--
 		const title = Element.createSectionTitle(projectName);
+		title.classList.add("edit-title");
+		title.dataset.button = "edit-project";
 		wrapper.append(title);
 		// --Delete Button--
 		const deleteBtn = Element.createButton("delete-project", "delete-todo");
