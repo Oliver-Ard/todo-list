@@ -133,10 +133,22 @@ class App {
 	}
 
 	#deleteTask(targetItem) {
+		const section = this.#currentSection.dataset.button;
 		const taskIndex = targetItem.parentNode.dataset.index;
-		this.inbox.removeTodo(taskIndex);
 
-		this.#showTasksList(this.inbox.todos);
+		switch (section) {
+			case "inbox": {
+				this.inbox.removeTodo(taskIndex);
+				this.#showTasksList(this.inbox.todos);
+				break;
+			}
+			case "project": {
+				const projectIndex = this.#currentSection.parentNode.dataset.index;
+				this.projects.list[projectIndex].removeTodo(taskIndex);
+				this.#showTasksList(this.projects.list[projectIndex].todos);
+				break;
+			}
+		}
 	}
 
 	#countItems(btnName) {
