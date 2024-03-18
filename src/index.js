@@ -104,9 +104,22 @@ class App {
 	#editTask(targetItem) {
 		// Get Todo Item
 		const todoIndex = targetItem.parentNode.dataset.index;
-		const todoToEdit = this.inbox.todos[todoIndex];
+		const section = this.#currentSection.dataset.button;
+		let todoToEdit;
+		let projectIndex;
+
+		switch (section) {
+			case "inbox":
+				todoToEdit = this.inbox.todos[todoIndex];
+				break;
+			case "project":
+				projectIndex = this.#currentSection.parentNode.dataset.index;
+				todoToEdit = this.projects.list[projectIndex].todos[todoIndex];
+				break;
+		}
+
 		// Get Form
-		const editTaskForm = document.querySelector("[data-form = 'edit-task']");
+		const editTaskForm = document.querySelector("[data-form='edit-task']");
 		// Get Inputs
 		const taskName = document.querySelector("#task-name");
 		const taskDescription = document.querySelector("#task-description");
@@ -127,8 +140,16 @@ class App {
 				priorityStatus.value
 			);
 
+			switch (section) {
+				case "inbox": {
+					this.#showTasksList(this.inbox.todos);
+					break;
+				}
+				case "project": {
+					this.#showTasksList(this.projects.list[projectIndex].todos);
+				}
+			}
 			this.#removeModal();
-			this.#showTasksList(this.inbox.todos);
 		});
 	}
 
