@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 import { Todo, TodosList } from "./components/Todo.js";
 import { Note, NotesList } from "./components/Note.js";
 import ProjectsList from "./components/ProjectsList.js";
@@ -68,7 +70,7 @@ class App {
 					const todoEl = Display.renderTodo(
 						item.title,
 						item.description,
-						item.dueDate,
+						this.#formatDate(item.dueDate),
 						item.priorityStatus
 					);
 					// Add index for the item to be able to manipulate it
@@ -134,10 +136,6 @@ class App {
 
 			this.#removeModal();
 		});
-	}
-
-	#getButton(targetBtn) {
-		return document.querySelector(`button[data-button = '${targetBtn}']`);
 	}
 
 	#editTask(targetItem) {
@@ -397,6 +395,14 @@ class App {
 			notesBtn.classList.add("active");
 		} else {
 			notesBtn.classList.remove("active");
+		}
+	}
+
+	#formatDate(date) {
+		if (date === undefined || date === "") {
+			return date;
+		} else {
+			return format(date, "MMMM d, yyyy");
 		}
 	}
 
