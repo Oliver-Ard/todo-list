@@ -22,10 +22,29 @@ class Display {
 		const todosList = Element.createList("todos");
 		inbox.append(todosList);
 		// --Add Task Button--
-		const addTaskBtn = Component.createAddBtn("task");
+		const addTaskBtn = Component.createAddBtn("task", "add-task");
 		inbox.append(addTaskBtn);
 
 		Display.#content.append(inbox);
+	}
+
+	static renderNotes() {
+		Display.#content.textContent = "";
+
+		const notes = Element.createSection("notes");
+		// --Title--
+		const title = Element.createSectionTitle("Notes");
+		const titleIcon = Element.createIcon("note-sticky", "regular");
+		title.prepend(titleIcon);
+		notes.append(title);
+		// --List--
+		const notesList = Element.createList("notes");
+		notes.append(notesList);
+		// --Add Note Button--
+		const addNoteBtn = Component.createAddBtn("note", "add-note");
+		notes.append(addNoteBtn);
+
+		Display.#content.append(notes);
 	}
 
 	static renderProject(projectName) {
@@ -33,13 +52,13 @@ class Display {
 
 		const project = Element.createSection("project");
 		// --Title--
-		const title = Component.createProjectTitle(projectName);
+		const title = Component.createProjectTitle(`# ${projectName}`);
 		project.append(title);
 		// --List--
 		const todosList = Element.createList("todos");
 		project.append(todosList);
 		// --Add Task Button--
-		const addTaskBtn = Component.createAddBtn("task");
+		const addTaskBtn = Component.createAddBtn("task", "add-task");
 		project.append(addTaskBtn);
 
 		Display.#content.append(project);
@@ -47,13 +66,23 @@ class Display {
 
 	static renderModal(modalType, parentElement) {
 		switch (modalType) {
-			case "add-modal": {
+			case "add-task-modal": {
 				const modal = Component.createTaskModal("add");
 				parentElement.append(modal);
 				break;
 			}
-			case "edit-modal": {
+			case "add-note-modal": {
+				const modal = Component.createNoteModal("add");
+				parentElement.append(modal);
+				break;
+			}
+			case "edit-task-modal": {
 				const modal = Component.createTaskModal("edit");
+				parentElement.append(modal);
+				break;
+			}
+			case "edit-note-modal": {
+				const modal = Component.createNoteModal("edit");
 				parentElement.append(modal);
 				break;
 			}
@@ -62,13 +91,13 @@ class Display {
 				parentElement.append(modal);
 				break;
 			}
-			case "delete-project-modal": {
-				const modal = Component.createDeleteModal("project");
+			case "edit-project-modal": {
+				const modal = Component.createProjectModal("edit");
 				parentElement.append(modal);
 				break;
 			}
-			case "edit-project-modal": {
-				const modal = Component.createProjectModal("edit");
+			case "delete-project-modal": {
+				const modal = Component.createDeleteModal("project");
 				parentElement.append(modal);
 				break;
 			}
@@ -79,7 +108,11 @@ class Display {
 		return Component.createTodoItem(title, description, date, priorityStatus);
 	}
 
-	static addProjectBtn(btnName) {
+	static renderNote(title, description) {
+		return Component.createNoteItem(title, description);
+	}
+
+	static renderProjectBtn(btnName) {
 		return Component.createProjectBtn(btnName);
 	}
 }

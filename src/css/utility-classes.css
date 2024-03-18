@@ -13,7 +13,7 @@
 	gap: 3rem;
 }
 
-.title-wrapper .delete-todo-btn {
+.title-wrapper .delete-item-btn {
 	align-self: start;
 }
 
@@ -115,9 +115,9 @@
 	margin: 0 auto;
 }
 
-.delete-todo-btn {
+.edit-item-btn,
+.delete-item-btn {
 	background: none;
-	color: var(--clr-red);
 	font-size: var(--font-size-500);
 	padding: 0;
 	border-radius: var(--border-radius);
@@ -128,13 +128,23 @@
 	transition: all 0.1s ease-in-out;
 }
 
-.delete-todo-btn:hover {
+.edit-item-btn:hover,
+.delete-item-btn:hover {
 	transform: scale(1.2);
 }
 
-.todo-item .delete-todo-btn:focus {
+.edit-item-btn:focus,
+.delete-item-btn:focus {
 	outline: 0;
 	box-shadow: var(--button-box-shadow-dark);
+}
+
+.edit-item-btn {
+	color: var(--clr-dark);
+}
+
+.delete-item-btn {
+	color: var(--clr-red);
 }
 
 /* MODAL */

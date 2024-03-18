@@ -1,4 +1,5 @@
 import { Todo, TodosList } from "./components/Todo.js";
+import { Note, NotesList } from "./components/Note.js";
 import ProjectsList from "./components/ProjectsList.js";
 import Display from "./components/Display.js";
 
@@ -8,63 +9,93 @@ class App {
 	#currentSection;
 	constructor() {
 		this.inbox = new TodosList("inbox");
+		this.notes = new NotesList();
 		this.projects = new ProjectsList();
 		this.#currentSection = document.querySelector("[data-button = 'inbox']");
 
 		this.#loadEventListeners();
 	}
 
-	#showSection(sectionName, targetItem = this.#currentSection) {
+	#showSection(sectionName, targetSection = this.#currentSection) {
 		switch (sectionName) {
 			case "inbox": {
 				// Get current section
-				this.#currentSection = targetItem;
+				this.#currentSection = targetSection;
+				this.#toggleInboxBtnState("active");
+				this.#toggleNotesBtnState("inactive");
 
 				Display.renderInbox();
-				this.#toggleInboxBtnState("active");
-				this.#showTasksList(this.inbox.todos);
+				this.#showList(this.inbox.todos);
+				break;
+			}
+			case "notes": {
+				// Get current section
+				this.#currentSection = targetSection;
+				this.#toggleInboxBtnState("inactive");
+				this.#toggleNotesBtnState("active");
+
+				Display.renderNotes();
+				this.#showList(this.notes.list, "notes");
 				break;
 			}
 			case "project": {
 				// Get current section
-				this.#currentSection = targetItem;
-
-				Display.renderProject(`# ${targetItem.textContent}`);
+				this.#currentSection = targetSection;
 				this.#toggleInboxBtnState("inactive");
-				const projectIndex = targetItem.parentNode.dataset.index;
-				this.#showTasksList(this.projects.list[projectIndex].todos);
+				this.#toggleNotesBtnState("inactive");
+
+				Display.renderProject(this.#currentSection.textContent);
+				const projectIndex = this.#currentSection.parentNode.dataset.index;
+				this.#showList(this.projects.list[projectIndex].todos);
+				break;
 			}
 		}
-
 		this.#showProjectsList();
 		this.#countItems("project");
+		this.#countItems("notes");
 	}
 
 	// --TASKS--
-	#showTasksList(listTarget) {
-		const todosListEl = document.querySelector("[data-element = 'todos-list']");
+	#showList(listTarget, type = "todos") {
+		const todosListEl = document.querySelector(
+			`[data-element = '${type}-list']`
+		);
 		todosListEl.textContent = "";
 
-		for (let todo of listTarget) {
-			const todoEl = Display.renderTodo(
-				todo.title,
-				todo.description,
-				todo.dueDate,
-				todo.priorityStatus
-			);
-			// Add index for the todo to be able to manipulate it
-			todoEl.setAttribute("data-index", `${listTarget.indexOf(todo)}`);
+		for (let item of listTarget) {
+			switch (type) {
+				case "todos": {
+					const todoEl = Display.renderTodo(
+						item.title,
+						item.description,
+						item.dueDate,
+						item.priorityStatus
+					);
+					// Add index for the item to be able to manipulate it
+					todoEl.setAttribute("data-index", `${listTarget.indexOf(item)}`);
+					// Change the state of the checkbox button depending on the status of the item
+					const checkBox = todoEl.children[0];
+					if (item.status === "unfinished") {
+						checkBox.checked = false;
+					} else {
+						checkBox.checked = true;
+					}
 
-			// Change the state of the checkbox button depending on the status of the todo
-			const checkBox = todoEl.children[0];
-			if (todo.status === "unfinished") {
-				checkBox.checked = false;
-			} else {
-				checkBox.checked = true;
+					todosListEl.append(todoEl);
+					break;
+				}
+				case "notes": {
+					const noteEl = Display.renderNote(item.title, item.description);
+					// Add index for the item to be able to manipulate it
+					noteEl.setAttribute("data-index", `${listTarget.indexOf(item)}`);
+
+					todosListEl.append(noteEl);
+					break;
+				}
 			}
-			todosListEl.append(todoEl);
 		}
 		this.#countItems("inbox");
+		this.#countItems("notes");
 		this.#countItems("project");
 	}
 
@@ -90,14 +121,14 @@ class App {
 			switch (section) {
 				case "inbox": {
 					this.inbox.addTodo(task);
-					this.#showTasksList(this.inbox.todos);
+					this.#showList(this.inbox.todos);
 					break;
 				}
 				case "project": {
 					const projectIndex = sectionBtn.parentNode.dataset.index;
 					const currentProject = this.projects.list[projectIndex];
 					currentProject.addTodo(task);
-					this.#showTasksList(currentProject.todos);
+					this.#showList(currentProject.todos);
 				}
 			}
 
@@ -147,11 +178,11 @@ class App {
 
 			switch (section) {
 				case "inbox": {
-					this.#showTasksList(this.inbox.todos);
+					this.#showList(this.inbox.todos);
 					break;
 				}
 				case "project": {
-					this.#showTasksList(this.projects.list[projectIndex].todos);
+					this.#showList(this.projects.list[projectIndex].todos);
 				}
 			}
 			this.#removeModal();
@@ -165,16 +196,66 @@ class App {
 		switch (section) {
 			case "inbox": {
 				this.inbox.removeTodo(taskIndex);
-				this.#showTasksList(this.inbox.todos);
+				this.#showList(this.inbox.todos);
 				break;
 			}
 			case "project": {
 				const projectIndex = this.#currentSection.parentNode.dataset.index;
 				this.projects.list[projectIndex].removeTodo(taskIndex);
-				this.#showTasksList(this.projects.list[projectIndex].todos);
+				this.#showList(this.projects.list[projectIndex].todos);
 				break;
 			}
 		}
+	}
+
+	// --NOTES--
+	#addNote() {
+		const addNoteForm = document.querySelector("[data-form = 'add-note']");
+
+		addNoteForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			// Get Inputs
+			const noteName = document.querySelector("#note-name");
+			const noteDescription = document.querySelector("#note-description");
+			// Add Note
+			const note = new Note(noteName.value, noteDescription.value);
+
+			this.notes.addNote(note);
+			this.#showList(this.notes.list, "notes");
+
+			this.#removeModal();
+		});
+	}
+
+	#editNote(targetItem) {
+		// Get Note Item
+		const noteIndex = targetItem.parentNode.dataset.index;
+		const noteToEdit = this.notes.list[noteIndex];
+		// Get Form
+		const editNoteForm = document.querySelector("[data-form='edit-note']");
+		// Get Inputs
+		const noteName = document.querySelector("#note-name");
+		const noteDescription = document.querySelector("#note-description");
+		// Get Current Value Inputs
+		noteName.value = noteToEdit.title;
+		noteDescription.value = noteToEdit.description;
+
+		editNoteForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			// Update with new values
+			noteToEdit.editNote(noteName.value, noteDescription.value);
+
+			this.#showList(this.notes.list, "notes");
+
+			this.#removeModal();
+		});
+	}
+
+	#deleteNote(targetItem) {
+		const noteIndex = targetItem.parentNode.dataset.index;
+
+		this.notes.removeNote(noteIndex);
+		this.#showList(this.notes.list, "notes");
 	}
 
 	// --PROJECTS--
@@ -183,17 +264,17 @@ class App {
 		projectsListEl.textContent = "";
 
 		for (let project of this.projects.list) {
-			const projectEl = Display.addProjectBtn(project.name);
+			const projectBtn = Display.renderProjectBtn(project.name);
 			const projectIndex = this.projects.list.indexOf(project);
 
 			// Check if this project is the current active project
 			if (projectIndex === +this.#currentSection.parentNode.dataset.index) {
-				projectEl.children[0].classList.add("active");
+				projectBtn.children[0].classList.add("active");
 			}
 
 			// Add index for the todo to be able to manipulate it
-			projectEl.setAttribute("data-index", projectIndex);
-			projectsListEl.append(projectEl);
+			projectBtn.setAttribute("data-index", projectIndex);
+			projectsListEl.append(projectBtn);
 		}
 	}
 
@@ -232,14 +313,14 @@ class App {
 			currentProject.editList(projectName.value);
 
 			// Show the project section
-			Display.renderProject(`# ${projectName.value}`);
-			this.#showTasksList(this.projects.list[projectIndex].todos);
+			Display.renderProject(projectName.value);
+			this.#showList(this.projects.list[projectIndex].todos);
 			this.#showProjectsList();
 		});
 	}
 
 	#deleteProject() {
-		const projectIndex = this.#currentSection.parentElement.dataset.index;
+		const projectIndex = this.#currentSection.parentNode.dataset.index;
 		this.projects.removeProject(projectIndex);
 		// Update the current section to be the inbox, to remove the 'active' class of a project element
 		this.#currentSection = document.querySelector("[data-button='inbox']");
@@ -247,11 +328,17 @@ class App {
 		this.#showSection("inbox");
 	}
 
-	#countItems(btnName) {
-		switch (btnName) {
+	#countItems(itemName) {
+		switch (itemName) {
 			case "inbox": {
 				const listLength = this.inbox.todos.length;
-				const button = document.querySelector(`[data-button = ${btnName}]`);
+				const button = document.querySelector("[data-button = 'inbox']");
+				button.dataset.content = listLength;
+				break;
+			}
+			case "notes": {
+				const listLength = this.notes.list.length;
+				const button = document.querySelector("[data-button = 'notes']");
 				button.dataset.content = listLength;
 				break;
 			}
@@ -260,10 +347,8 @@ class App {
 					document.querySelectorAll("[data-button = project]")
 				);
 				buttons.forEach((button, index) => {
-					const projectIndex = index;
-					const projectTodos = this.projects.list[projectIndex].todos;
-					const projectTodosNr = projectTodos.length;
-					button.dataset.content = projectTodosNr;
+					const listLength = this.projects.list[index].todos.length;
+					button.dataset.content = listLength;
 				});
 				break;
 			}
@@ -271,6 +356,7 @@ class App {
 	}
 
 	#toggleTaskStatus(targetItem) {
+		// Check if a task is crossed or not
 		const section = this.#currentSection.dataset.button;
 		const taskIndex = targetItem.parentNode.dataset.index;
 
@@ -293,10 +379,20 @@ class App {
 
 	#toggleInboxBtnState(state) {
 		const inboxBtn = document.querySelector("[data-button='inbox']");
+
 		if (state === "active") {
 			inboxBtn.classList.add("active");
 		} else {
 			inboxBtn.classList.remove("active");
+		}
+	}
+
+	#toggleNotesBtnState(state) {
+		const notesBtn = document.querySelector("[data-button='notes']");
+		if (state === "active") {
+			notesBtn.classList.add("active");
+		} else {
+			notesBtn.classList.remove("active");
 		}
 	}
 
@@ -316,6 +412,10 @@ class App {
 				this.#showSection("inbox", target);
 				break;
 			}
+			case "notes": {
+				this.#showSection("notes", target);
+				break;
+			}
 			case "project": {
 				this.#showSection("project", target);
 				break;
@@ -327,16 +427,27 @@ class App {
 				break;
 			}
 			// Main Content Buttons
-			case "add": {
-				Display.renderModal("add-modal", Display.content);
-
+			case "add-task": {
+				Display.renderModal("add-task-modal", Display.content);
 				this.#addTask(this.#currentSection);
 				this.#openModal();
 				break;
 			}
-			case "edit": {
-				Display.renderModal("edit-modal", Display.content);
+			case "add-note": {
+				Display.renderModal("add-note-modal", Display.content);
+				this.#addNote();
+				this.#openModal();
+				break;
+			}
+			case "edit-task": {
+				Display.renderModal("edit-task-modal", Display.content);
 				this.#editTask(targetParent);
+				this.#openModal();
+				break;
+			}
+			case "edit-note": {
+				Display.renderModal("edit-note-modal", Display.content);
+				this.#editNote(targetParent);
 				this.#openModal();
 				break;
 			}
@@ -346,8 +457,12 @@ class App {
 				this.#openModal();
 				break;
 			}
-			case "delete": {
+			case "delete-task": {
 				this.#deleteTask(targetParent);
+				break;
+			}
+			case "delete-note": {
+				this.#deleteNote(targetParent);
 				break;
 			}
 			case "delete-project": {
@@ -397,7 +512,6 @@ class App {
 		window.addEventListener("DOMContentLoaded", () => {
 			this.#showSection("inbox");
 		});
-
 		document.addEventListener("click", this.#handleDocumentBtns.bind(this));
 	}
 }
@@ -421,7 +535,12 @@ app.inbox.addTodo(
 	)
 );
 app.inbox.addTodo(
-	new Todo("Practice Algorithm Challenges", null, "2024-08-09", "Low")
+	new Todo(
+		"Practice Algorithm Challenges",
+		"They rushed out the door, grabbing anything and everything they could think of they might need. There was no time to double-check to make sure they weren't leaving something important behind. Everything was thrown into the car and they sped off. Thirty minutes later they were safe and that was when it dawned on them that they had forgotten the most important thing of all. The song came from the bathroom belting over the sound of the shower's running water. It was the same way each day began since he could remember. It listened intently and concluded that the singing today was as terrible as it had ever been.",
+		"2024-08-09",
+		"Low"
+	)
 );
 app.inbox.addTodo(
 	new Todo(
@@ -454,3 +573,12 @@ app.projects.list[0].addTodo(new Todo("test"));
 app.projects.list[0].addTodo(new Todo("test"));
 app.projects.addProject(new TodosList("Health"));
 app.projects.list[1].addTodo(new Todo("test"));
+
+app.notes.addNote(new Note("Note Test", "Random Description"));
+app.notes.addNote(new Note("Noteeeeeee Test", "Random Description Part 2"));
+app.notes.addNote(
+	new Note(
+		"Maybe I will to something today",
+		"They rushed out the door, grabbing anything and everything they could think of they might need. There was no time to double-check to make sure they weren't leaving something important behind. Everything was thrown into the car and they sped off. Thirty minutes later they were safe and that was when it dawned on them that they had forgotten the most important thing of all. The song came from the bathroom belting over the sound of the shower's running water. It was the same way each day began since he could remember. It listened intently and concluded that the singing today was as terrible as it had ever been."
+	)
+);

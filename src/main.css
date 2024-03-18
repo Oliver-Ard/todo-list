@@ -1,7 +1,7 @@
 @import "./css/reset.css";
 @import "./css/utility-classes.css";
 @import "./css/sidebar.css";
-@import "./css/todo.css";
+@import "./css/list.css";
 
 /* VARIABLES */
 :root {
@@ -137,15 +137,5 @@ label {
 
 	#sidebar .slider-btn {
 		display: block;
-	}
-
-	.todo-item .todo-item-description {
-		width: 15rem;
-	}
-}
-
-@media only screen and (max-width: 480px) {
-	.todo-item .todo-item-description {
-		width: 6.5rem;
 	}
 }
