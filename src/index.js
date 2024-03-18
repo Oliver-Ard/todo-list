@@ -136,6 +136,10 @@ class App {
 		});
 	}
 
+	#getButton(targetBtn) {
+		return document.querySelector(`button[data-button = '${targetBtn}']`);
+	}
+
 	#editTask(targetItem) {
 		// Get Todo Item
 		const todoIndex = targetItem.parentNode.dataset.index;
@@ -440,12 +444,19 @@ class App {
 				break;
 			}
 			case "edit-task": {
+				// Check if the target element has a valid index in its parent's dataset
+				if (!targetParent.parentNode.dataset.index) {
+					return;
+				}
 				Display.renderModal("edit-task-modal", Display.content);
 				this.#editTask(targetParent);
 				this.#openModal();
 				break;
 			}
 			case "edit-note": {
+				if (!targetParent.parentNode.dataset.index) {
+					return;
+				}
 				Display.renderModal("edit-note-modal", Display.content);
 				this.#editNote(targetParent);
 				this.#openModal();
@@ -458,10 +469,16 @@ class App {
 				break;
 			}
 			case "delete-task": {
+				if (!targetParent.parentNode.dataset.index) {
+					return;
+				}
 				this.#deleteTask(targetParent);
 				break;
 			}
 			case "delete-note": {
+				if (!targetParent.parentNode.dataset.index) {
+					return;
+				}
 				this.#deleteNote(targetParent);
 				break;
 			}
