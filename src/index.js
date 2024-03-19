@@ -1,9 +1,6 @@
-import { format } from "date-fns";
-
-import { Todo, TodosList } from "./components/Todo.js";
-import { Note, NotesList } from "./components/Note.js";
-import ProjectsList from "./components/ProjectsList.js";
+import { Todo, TodosList, Note } from "./components/TodoNoteLogic.js";
 import Display from "./components/Display.js";
+import Storage from "./components/Storage.js";
 import {
 	inboxExamples,
 	notesExamples,
@@ -11,8 +8,8 @@ import {
 	homeOrganizationTodos,
 	fitnessRoutineTodos,
 } from "./components/examplesData.js";
-import Storage from "./components/Storage.js";
 
+import { format } from "date-fns";
 import "./main.css";
 
 class App {
@@ -65,7 +62,6 @@ class App {
 		this.#countItems("notes");
 	}
 
-	// --TASKS--
 	#showList(listTarget, type = "todos") {
 		const todosListEl = document.querySelector(
 			`[data-element = '${type}-list']`
@@ -73,6 +69,7 @@ class App {
 		todosListEl.textContent = "";
 
 		for (let item of listTarget) {
+			// Check if todos will pe rendered or notes
 			switch (type) {
 				case "todos": {
 					const todoEl = Display.renderTodo(
@@ -109,7 +106,8 @@ class App {
 		this.#countItems("project");
 	}
 
-	#addTask(sectionBtn) {
+	// --TASKS--
+	#addTask(targetItem) {
 		const addTaskForm = document.querySelector("[data-form = 'add-task']");
 
 		addTaskForm.addEventListener("submit", (e) => {
@@ -127,7 +125,7 @@ class App {
 				priorityStatus.value
 			);
 			// Check the current section, add the task of the current section and render the correct list
-			const section = sectionBtn.dataset.button;
+			const section = targetItem.dataset.button;
 			switch (section) {
 				case "inbox": {
 					this.inbox.addTodo(task);
@@ -136,7 +134,7 @@ class App {
 					break;
 				}
 				case "project": {
-					const projectIndex = sectionBtn.parentNode.dataset.index;
+					const projectIndex = targetItem.parentNode.dataset.index;
 					const currentProject = this.projects.list[projectIndex];
 					currentProject.addTodo(task);
 					this.#showList(currentProject.todos);
@@ -244,6 +242,7 @@ class App {
 			this.#showList(this.notes.list, "notes");
 
 			this.#removeModal();
+
 			Storage.saveNotes(this.notes);
 		});
 	}
@@ -269,6 +268,7 @@ class App {
 			this.#showList(this.notes.list, "notes");
 
 			this.#removeModal();
+
 			Storage.saveNotes(this.notes);
 		});
 	}
@@ -278,6 +278,7 @@ class App {
 
 		this.notes.removeNote(noteIndex);
 		this.#showList(this.notes.list, "notes");
+
 		Storage.saveNotes(this.notes);
 	}
 
@@ -317,6 +318,7 @@ class App {
 			this.#showProjectsList();
 			this.#countItems("project");
 			this.#removeModal();
+
 			Storage.saveProjects(this.projects);
 		});
 	}
@@ -340,6 +342,7 @@ class App {
 			Display.renderProject(projectName.value);
 			this.#showList(this.projects.list[projectIndex].todos);
 			this.#showProjectsList();
+
 			Storage.saveProjects(this.projects);
 		});
 	}
@@ -351,6 +354,7 @@ class App {
 		this.#currentSection = document.querySelector("[data-button='inbox']");
 		this.#showProjectsList();
 		this.#showSection("inbox");
+
 		Storage.saveProjects(this.projects);
 	}
 
@@ -424,6 +428,29 @@ class App {
 		}
 	}
 
+	// HELPER METHODS
+	#openModal() {
+		const modal = document.querySelector("dialog");
+		// Overwrite the default escape key behavior for the modal to delete the modal.
+		modal.addEventListener("keydown", (e) => {
+			if (e.key === `Escape`) {
+				this.#removeModal();
+			}
+		});
+
+		modal.showModal();
+	}
+
+	#removeModal() {
+		const modal = document.querySelector("dialog");
+		Display.content.removeChild(modal);
+	}
+
+	#toggleSidebar() {
+		const sidebar = document.querySelector("#sidebar");
+		sidebar.classList.toggle("active");
+	}
+
 	#formatDate(date) {
 		if (date === undefined || date === "") {
 			return date;
@@ -432,7 +459,6 @@ class App {
 		}
 	}
 
-	// HELPER METHODS
 	// --Buttons Handler--
 	#handleDocumentBtns(e) {
 		const target = e.target;
@@ -535,28 +561,6 @@ class App {
 		}
 	}
 
-	#openModal() {
-		const modal = document.querySelector("dialog");
-		// Overwrite the default escape key behavior for the modal to delete the modal.
-		modal.addEventListener("keydown", (e) => {
-			if (e.key === `Escape`) {
-				this.#removeModal();
-			}
-		});
-
-		modal.showModal();
-	}
-
-	#removeModal() {
-		const modal = document.querySelector("dialog");
-		Display.content.removeChild(modal);
-	}
-
-	#toggleSidebar() {
-		const sidebar = document.querySelector("#sidebar");
-		sidebar.classList.toggle("active");
-	}
-
 	#loadEventListeners() {
 		window.addEventListener("DOMContentLoaded", () => {
 			this.#showSection("inbox");
@@ -568,8 +572,7 @@ class App {
 const app = new App();
 
 // --Data Examples--
-
-function generateExamples() {
+function renderExamples() {
 	if (localStorage.length === 0) {
 		inboxExamples.forEach((example) => {
 			app.inbox.addTodo(example);
@@ -596,4 +599,4 @@ function generateExamples() {
 	Storage.saveProjects(app.projects);
 }
 
-generateExamples();
+renderExamples();

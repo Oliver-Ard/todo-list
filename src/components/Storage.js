@@ -1,6 +1,10 @@
-import { TodosList, Todo } from "./Todo.js";
-import { NotesList, Note } from "./Note.js";
-import ProjectsList from "./ProjectsList.js";
+import {
+	Todo,
+	TodosList,
+	Note,
+	NotesList,
+	ProjectsList,
+} from "./TodoNoteLogic.js";
 
 class Storage {
 	// --Inbox--

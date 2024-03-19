@@ -1,5 +1,4 @@
-import { Todo, TodosList } from "./Todo.js";
-import { Note } from "./Note.js";
+import { Todo, TodosList, Note } from "./TodoNoteLogic.js";
 
 // --Inbox Todos--
 const inboxExamples = [

@@ -32,7 +32,7 @@
 	transform: scale(0);
 }
 
-/* --Todo Description, Date & PriorityTag-- */
+/* --Todo/Note Description, Date & PriorityTag-- */
 .todo-item .todo-item-description,
 .note-item .note-item-description,
 .todo-item .todo-item-date,
@@ -53,7 +53,7 @@
 }
 
 .todo-item .todo-item-date {
-	color: var(--clr-purple);
+	color: var(--clr-primary-2);
 }
 
 .todo-item .todo-priority-tag {

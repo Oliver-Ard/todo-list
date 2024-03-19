@@ -17,17 +17,17 @@
 	--font-size-900: 2.488rem;
 	--font-size-1000: 2.986rem;
 
-	--clr-primary: #306a79;
+	--clr-primary: #713d8f;
+	--clr-primary-2: #a500be;
 	--clr-secondary: #ffbb01;
 	--clr-dark: #242020;
 	--clr-grey: #d8d8d8;
 	--clr-grey-2: #a9a9a9;
 	--clr-light: #fff;
 	--clr-red: #b70000;
-	--clr-purple: #a500be;
 
 	--clr-overlay: rgb(0, 0, 0, 0.85);
-	--clr-overlay-2: rgba(32, 47, 48, 0.522);
+	--clr-overlay-2: rgba(39, 32, 48, 0.522);
 	--clr-overlay-3: #e3fdfd53;
 
 	--box-shadow: 0px 5px 15px 0 rgba(0, 0, 0, 0.8);
