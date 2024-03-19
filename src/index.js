@@ -4,6 +4,13 @@ import { Todo, TodosList } from "./components/Todo.js";
 import { Note, NotesList } from "./components/Note.js";
 import ProjectsList from "./components/ProjectsList.js";
 import Display from "./components/Display.js";
+import {
+	inboxExamples,
+	notesExamples,
+	projectsExamples,
+	homeOrganizationTodos,
+	fitnessRoutineTodos,
+} from "./components/examplesData.js";
 
 import "./main.css";
 
@@ -538,70 +545,53 @@ class App {
 		document.addEventListener("click", this.#handleDocumentBtns.bind(this));
 	}
 }
+// Initialize the App
 const app = new App();
 
-app.inbox.addTodo(
-	new Todo(
-		"Complete JavaScript Fundamentals",
-		"Finish reading and practicing JavaScript basics, including variables, data types, and operators.",
-		"2024-03-20",
-		"High"
-	)
-);
+// --Data Examples--
+inboxExamples.forEach((todo, index) => {
+	app.inbox.addTodo(todo);
+	// Update the status for these todos
+	switch (index) {
+		case 0: {
+			todo.updateTodoStatus("finished");
+			break;
+		}
+		case 2: {
+			todo.updateTodoStatus("finished");
+			break;
+		}
+	}
+});
 
-app.inbox.addTodo(
-	new Todo(
-		"Build Portfolio Website",
-		"Develop a personal portfolio website showcasing projects and skills using HTML, CSS, and JavaScript.",
-		"2024-04-10",
-		"Medium"
-	)
-);
-app.inbox.addTodo(
-	new Todo(
-		"Practice Algorithm Challenges",
-		"They rushed out the door, grabbing anything and everything they could think of they might need. There was no time to double-check to make sure they weren't leaving something important behind. Everything was thrown into the car and they sped off. Thirty minutes later they were safe and that was when it dawned on them that they had forgotten the most important thing of all. The song came from the bathroom belting over the sound of the shower's running water. It was the same way each day began since he could remember. It listened intently and concluded that the singing today was as terrible as it had ever been.",
-		"2024-08-09",
-		"Low"
-	)
-);
-app.inbox.addTodo(
-	new Todo(
-		"Study Node.js",
-		" Learn Node.js by following tutorials and building small projects to understand server-side JavaScript development.",
-		"2024-05-05",
-		"Medium"
-	)
-);
-app.inbox.addTodo(
-	new Todo(
-		"Update GitHub Repositories",
-		"Push recent code changes to GitHub repositories and ensure documentation is up to date.",
-		"2024-06-12",
-		"Low"
-	)
-);
+notesExamples.forEach((note) => {
+	app.notes.addNote(note);
+});
 
-app.inbox.addTodo(
-	new Todo(
-		"Test 1",
-		"Push recent code changes to GitHub repositories and ensure documentation is up to date.",
-		"2024-06-12",
-		"Low"
-	)
-);
+projectsExamples.forEach((project) => {
+	app.projects.addProject(project);
+});
 
-app.projects.addProject(new TodosList("Bills"));
-app.projects.list[0].addTodo(new Todo("test"));
-app.projects.list[0].addTodo(new Todo("test"));
-app.projects.addProject(new TodosList("Health"));
-app.projects.list[1].addTodo(new Todo("test"));
+homeOrganizationTodos.forEach((todo, index) => {
+	app.projects.list[0].addTodo(todo);
+	switch (index) {
+		case 0: {
+			todo.updateTodoStatus("finished");
+			break;
+		}
+		case 5: {
+			todo.updateTodoStatus("finished");
+			break;
+		}
+	}
+});
 
-app.notes.addNote(new Note("Note Test", "Random Description"));
-app.notes.addNote(new Note("Noteeeeeee Test", "Random Description Part 2"));
-app.notes.addNote(
-	new Note(
-		"Maybe I will to something today",
-		"They rushed out the door, grabbing anything and everything they could think of they might need. There was no time to double-check to make sure they weren't leaving something important behind. Everything was thrown into the car and they sped off. Thirty minutes later they were safe and that was when it dawned on them that they had forgotten the most important thing of all. The song came from the bathroom belting over the sound of the shower's running water. It was the same way each day began since he could remember. It listened intently and concluded that the singing today was as terrible as it had ever been."
-	)
-);
+fitnessRoutineTodos.forEach((todo, index) => {
+	app.projects.list[1].addTodo(todo);
+	switch (index) {
+		case 2: {
+			todo.updateTodoStatus("finished");
+			break;
+		}
+	}
+});
