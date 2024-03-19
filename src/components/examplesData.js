@@ -7,7 +7,8 @@ const inboxExamples = [
 		"Buy groceries",
 		"Purchase essential items such as fruits, vegetables, milk, and bread from the supermarket.",
 		"2024-03-19",
-		"Medium"
+		"Medium",
+		"finished"
 	),
 	new Todo(
 		"Pay utility bills",
@@ -19,7 +20,8 @@ const inboxExamples = [
 		"Call Mom",
 		"Check in with Mom to catch up and see how she's doing.",
 		"2024-03-18",
-		"Low"
+		"Low",
+		"finished"
 	),
 	new Todo(
 		"Workout session",
@@ -63,7 +65,8 @@ const homeOrganizationTodos = [
 		"Declutter the living room",
 		"Remove unnecessary items and organize the space to create a tidy and comfortable environment.",
 		"2024-03-25",
-		"Medium"
+		"Medium",
+		"finished"
 	),
 	new Todo(
 		"Organize kitchen cabinets",
@@ -93,7 +96,8 @@ const homeOrganizationTodos = [
 		"Sort and Donate Books",
 		"Go through bookshelves and select books to donate or pass on to friends, keeping only those that are frequently read or hold sentimental value.",
 		"2024-04-01",
-		"Medium"
+		"Medium",
+		"finished"
 	),
 ];
 
@@ -114,7 +118,8 @@ const fitnessRoutineTodos = [
 		"Yoga Session",
 		"Include a yoga session to improve flexibility, balance, and relaxation, focusing on stretching and mindfulness.",
 		"2024-03-27",
-		"Low"
+		"Low",
+		"finished"
 	),
 	new Todo(
 		"Weekly Meal Prep",

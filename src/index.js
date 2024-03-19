@@ -11,15 +11,16 @@ import {
 	homeOrganizationTodos,
 	fitnessRoutineTodos,
 } from "./components/examplesData.js";
+import Storage from "./components/Storage.js";
 
 import "./main.css";
 
 class App {
 	#currentSection;
 	constructor() {
-		this.inbox = new TodosList("inbox");
-		this.notes = new NotesList();
-		this.projects = new ProjectsList();
+		this.inbox = Storage.getInbox();
+		this.notes = Storage.getNotes();
+		this.projects = Storage.getProjects();
 		this.#currentSection = document.querySelector("[data-button = 'inbox']");
 
 		this.#loadEventListeners();
@@ -130,6 +131,7 @@ class App {
 			switch (section) {
 				case "inbox": {
 					this.inbox.addTodo(task);
+
 					this.#showList(this.inbox.todos);
 					break;
 				}
@@ -142,6 +144,9 @@ class App {
 			}
 
 			this.#removeModal();
+
+			Storage.saveInbox(this.inbox);
+			Storage.saveProjects(this.projects);
 		});
 	}
 
@@ -195,6 +200,9 @@ class App {
 				}
 			}
 			this.#removeModal();
+
+			Storage.saveInbox(this.inbox);
+			Storage.saveProjects(this.projects);
 		});
 	}
 
@@ -215,6 +223,9 @@ class App {
 				break;
 			}
 		}
+
+		Storage.saveInbox(this.inbox);
+		Storage.saveProjects(this.projects);
 	}
 
 	// --NOTES--
@@ -233,6 +244,7 @@ class App {
 			this.#showList(this.notes.list, "notes");
 
 			this.#removeModal();
+			Storage.saveNotes(this.notes);
 		});
 	}
 
@@ -257,6 +269,7 @@ class App {
 			this.#showList(this.notes.list, "notes");
 
 			this.#removeModal();
+			Storage.saveNotes(this.notes);
 		});
 	}
 
@@ -265,6 +278,7 @@ class App {
 
 		this.notes.removeNote(noteIndex);
 		this.#showList(this.notes.list, "notes");
+		Storage.saveNotes(this.notes);
 	}
 
 	// --PROJECTS--
@@ -303,6 +317,7 @@ class App {
 			this.#showProjectsList();
 			this.#countItems("project");
 			this.#removeModal();
+			Storage.saveProjects(this.projects);
 		});
 	}
 
@@ -325,6 +340,7 @@ class App {
 			Display.renderProject(projectName.value);
 			this.#showList(this.projects.list[projectIndex].todos);
 			this.#showProjectsList();
+			Storage.saveProjects(this.projects);
 		});
 	}
 
@@ -335,6 +351,7 @@ class App {
 		this.#currentSection = document.querySelector("[data-button='inbox']");
 		this.#showProjectsList();
 		this.#showSection("inbox");
+		Storage.saveProjects(this.projects);
 	}
 
 	#countItems(itemName) {
@@ -384,6 +401,8 @@ class App {
 				break;
 			}
 		}
+		Storage.saveInbox(this.inbox);
+		Storage.saveProjects(this.projects);
 	}
 
 	#toggleInboxBtnState(state) {
@@ -549,49 +568,32 @@ class App {
 const app = new App();
 
 // --Data Examples--
-inboxExamples.forEach((todo, index) => {
-	app.inbox.addTodo(todo);
-	// Update the status for these todos
-	switch (index) {
-		case 0: {
-			todo.updateTodoStatus("finished");
-			break;
-		}
-		case 2: {
-			todo.updateTodoStatus("finished");
-			break;
-		}
+
+function generateExamples() {
+	if (localStorage.length === 0) {
+		inboxExamples.forEach((example) => {
+			app.inbox.addTodo(example);
+		});
+
+		notesExamples.forEach((note) => {
+			app.notes.addNote(note);
+		});
+
+		projectsExamples.forEach((project) => {
+			app.projects.addProject(project);
+		});
+
+		homeOrganizationTodos.forEach((todo) => {
+			app.projects.list[0].addTodo(todo);
+		});
+
+		fitnessRoutineTodos.forEach((todo) => {
+			app.projects.list[1].addTodo(todo);
+		});
 	}
-});
+	Storage.saveInbox(app.inbox);
+	Storage.saveNotes(app.notes);
+	Storage.saveProjects(app.projects);
+}
 
-notesExamples.forEach((note) => {
-	app.notes.addNote(note);
-});
-
-projectsExamples.forEach((project) => {
-	app.projects.addProject(project);
-});
-
-homeOrganizationTodos.forEach((todo, index) => {
-	app.projects.list[0].addTodo(todo);
-	switch (index) {
-		case 0: {
-			todo.updateTodoStatus("finished");
-			break;
-		}
-		case 5: {
-			todo.updateTodoStatus("finished");
-			break;
-		}
-	}
-});
-
-fitnessRoutineTodos.forEach((todo, index) => {
-	app.projects.list[1].addTodo(todo);
-	switch (index) {
-		case 2: {
-			todo.updateTodoStatus("finished");
-			break;
-		}
-	}
-});
+generateExamples();
